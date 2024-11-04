@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<h1>{{ username }} </h1>
+<div>
+    <h5>Prénom : {{ firstname }}</h5>
+    <br>
+    <h5>Nom : {{ name }}</h5>
+    <br>
+    <h5>Téléphone : {{ phonenumber }}</h5>
+    <br>
+    <h5>Email : {{ email }}</h5>
+    <br>
+    <h5> Ville de rattachement : {{ town }}</h5>
+    <br>
+</div>
+
+<button type="button">Retour</button>
+{% endblock %}
