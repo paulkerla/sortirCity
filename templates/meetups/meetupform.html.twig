@@ -4,8 +4,19 @@
 
 {% block body %}
     {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Submit</button>
+    {{ form_row(form.name) }}
+    {{ form_row(form.startdatetime) }}
+    {{ form_row(form.registrationlimitdate) }}
+    {{ form_row(form.duration) }}
+    {{ form_row(form.maxregistrations) }}
+    {{ form_row(form.meetupinfos) }}
+    {{ form_row(form.participants) }}
+    {{ form_row(form.organizer) }}
+    {{ form_row(form.site) }}
+    {{ form_row(form.place) }}
+    {{ form_row(form.state) }}
+    <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-indigo-700">Submit</button>
     {{ form_end(form) }}
+
 
 {% endblock %}

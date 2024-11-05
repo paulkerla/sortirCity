@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: MeetupRepository::class)]
 class Meetup
@@ -21,12 +23,25 @@ class Meetup
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $startdatetime = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $registrationlimitdate = null;
+
 
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $registrationlimitdate = null;
+
+    #[Assert\Callback]
+    public function validateDates(ExecutionContextInterface $context): void
+    {
+        if ($this->startdatetime && $this->registrationlimitdate) {
+            if ($this->startdatetime < $this->registrationlimitdate) {
+                $context->buildViolation('The start date and time cannot be before the registration limit date.')
+                    ->atPath('startdatetime')
+                    ->addViolation();
+            }
+        }
+    }
 
     #[ORM\Column]
     private ?int $maxregistrations = null;
