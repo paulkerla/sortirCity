@@ -24,6 +24,7 @@ security:
             form_login:
                 login_path: user_login
                 check_path: user_login
+                default_target_path: app_index
                 enable_csrf: false
             logout:
                 path: user_logout

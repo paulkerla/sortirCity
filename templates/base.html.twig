@@ -7,7 +7,6 @@
     {# <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon"> #}
 </head>
 <body class="bg-gray-100 text-gray-900">
-
 <!-- Navigation -->
 <nav class="bg-blue-600 p-4 mb-4 shadow-lg">
     <a href="{{ path('app_index') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
@@ -22,8 +21,19 @@
     <a href="{{ path('meetup_list') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
         Meetups
     </a>
+    <a href="{{ path('user_logout') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
+        Logout
+    </a>
 </nav>
 
+{# Affichage des messages flash #}
+{% for label, messages in app.session.flashBag.all() %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
 
 <!-- Content -->
 <main class="container mx-auto px-4">
