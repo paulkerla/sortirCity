@@ -15,14 +15,14 @@ class Site
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 50)]
+    private ?string $name = null;
 
     /**
-     * @var Collection<int, Sortie>
+     * @var Collection<int, Meetup>
      */
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'site', orphanRemoval: true)]
-    private Collection $sorties;
+    #[ORM\OneToMany(targetEntity: Meetup::class, mappedBy: 'site', orphanRemoval: true)]
+    private Collection $meetups;
 
     /**
      * @var Collection<int, User>
@@ -32,7 +32,7 @@ class Site
 
     public function __construct()
     {
-        $this->sorties = new ArrayCollection();
+        $this->meetups = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -41,42 +41,42 @@ class Site
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): static
+    public function setName(string $name): static
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Sortie>
+     * @return Collection<int, Meetup>
      */
-    public function getSorties(): Collection
+    public function getMeetups(): Collection
     {
-        return $this->sorties;
+        return $this->meetups;
     }
 
-    public function addSorty(Sortie $sorty): static
+    public function addMeetup(Meetup $meetup): static
     {
-        if (!$this->sorties->contains($sorty)) {
-            $this->sorties->add($sorty);
-            $sorty->setSite($this);
+        if (!$this->meetups->contains($meetup)) {
+            $this->meetups->add($meetup);
+            $meetup->setSite($this);
         }
 
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): static
+    public function removeMeetup(Meetup $meetup): static
     {
-        if ($this->sorties->removeElement($sorty)) {
+        if ($this->meetups->removeElement($meetup)) {
             // set the owning side to null (unless already changed)
-            if ($sorty->getSite() === $this) {
-                $sorty->setSite(null);
+            if ($meetup->getSite() === $this) {
+                $meetup->setSite(null);
             }
         }
 

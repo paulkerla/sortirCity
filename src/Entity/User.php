@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -49,12 +51,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarurl = null;
 
-    #[ORM\ManyToOne(inversedBy: 'participants')]
-    private ?Sortie $sortie = null;
+    /**
+     * @var Collection<int, Meetup>
+     */
+    #[ORM\ManyToMany(targetEntity: Meetup::class, mappedBy: 'participants')]
+    private Collection $meetups;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Site $site = null;
+
+    public function __construct()
+    {
+        $this->meetups = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -203,14 +214,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSortie(): ?Sortie
+    /**
+     * @return Collection<int, Meetup>
+     */
+    public function getMeetups(): Collection
     {
-        return $this->sortie;
+        return $this->meetups;
     }
 
-    public function setSortie(?Sortie $sortie): static
+    public function addMeetup(Meetup $meetup): static
     {
-        $this->sortie = $sortie;
+        if (!$this->meetups->contains($meetup)) {
+            $this->meetups->add($meetup);
+            $meetup->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetup(Meetup $meetup): static
+    {
+        if ($this->meetups->removeElement($meetup)) {
+            $meetup->removeParticipant($this);
+        }
 
         return $this;
     }
@@ -226,4 +252,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 }
