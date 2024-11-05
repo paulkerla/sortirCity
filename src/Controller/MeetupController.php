@@ -31,7 +31,7 @@ class MeetupController extends AbstractController
             $entityManager->persist($entity);
             $entityManager->flush();
 
-            return $this->redirectToRoute('meetup_success');
+            return $this->redirectToRoute('meetup_list');
         }
 
         return $this->render('meetups/meetupform.html.twig', [
