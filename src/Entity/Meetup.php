@@ -74,6 +74,7 @@ class Meetup
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->state = "Created";
     }
 
     public function getId(): ?int

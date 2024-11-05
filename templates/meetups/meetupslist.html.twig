@@ -6,4 +6,16 @@
     <a href="{{ path('meetup_form') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
         New
     </a>
+    {% for meetup in meetups %}
+        <div class="meetup-item">
+            <h3>{{ meetup.name }}</h3>
+            <p>State: {{ meetup.state }}</p>
+
+            {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('meetup_edit_state', {'id': meetup.id}) }}" class="btn btn-primary">
+                    Edit State
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
 {% endblock %}
