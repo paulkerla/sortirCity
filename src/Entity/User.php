@@ -49,6 +49,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarurl = null;
 
+    #[ORM\ManyToOne(inversedBy: 'participants')]
+    private ?Sortie $sortie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $site = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -192,6 +199,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatarurl(?string $avatarurl): static
     {
         $this->avatarurl = $avatarurl;
+
+        return $this;
+    }
+
+    public function getSortie(): ?Sortie
+    {
+        return $this->sortie;
+    }
+
+    public function setSortie(?Sortie $sortie): static
+    {
+        $this->sortie = $sortie;
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): static
+    {
+        $this->site = $site;
 
         return $this;
     }
