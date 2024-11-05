@@ -2,30 +2,32 @@
 
 namespace App\Form;
 
+use App\Entity\City;
+use App\Entity\Place;
+use App\Entity\Site;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('username')
+            ->add('firstname')
+            ->add('surname')
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -43,6 +45,25 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'choice_label' => 'id',
+                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+            ])
+            ->add('phonenumber')
+            ->add('city', EntityType::class, [
+                'class' => City::class,
+                'choice_label' => 'id',
+                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+            ])
+            ->add('avatarUrl', FileType::class, [
+                'label' => 'Photo de profil (jpg, png)',
+                'required' => false,
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Sign up',
+                ]);
+        ;
         ;
     }
 
