@@ -14,6 +14,11 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            remember_me:
+                secret: '%env(APP_SECRET)%'  # Utilise la clé secrète de l'application
+                lifetime: 604800             # Durée de vie du cookie "remember me" en secondes (ici 1 semaine)
+                path: '/'                    # Le chemin pour lequel le cookie sera valide
+                # optional: always_remember_me: true  # Toujours activer "remember me" sans checkbox
             lazy: true
             provider: app_user_provider
             form_login:
