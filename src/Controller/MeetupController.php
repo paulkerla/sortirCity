@@ -38,4 +38,26 @@ class MeetupController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/{id}/unsubscribe', name: 'unsubscribe_')]
+    public function unsubscribe(Meetup $meetup):Response{
+
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if ($user) {
+            // Récupérer l'ID de l'utilisateur
+            $userId = $user->getId();
+
+            // Utiliser l'ID de l'utilisateur pour votre logique
+            // ...
+        } else {
+            return $this->redirectToRoute('login'); // Rediriger vers la page de connexion si non connecté
+        }
+
+        // Autres logiques pour se désister de l'événement
+        // ...
+
+        return new Response('Désinscription réussie');
+    }
 }
