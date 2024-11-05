@@ -67,6 +67,9 @@ class Meetup
     #[ORM\JoinColumn(nullable: false)]
     private ?Place $place = null;
 
+    /**
+     * @var State|null
+     */
     #[ORM\ManyToOne(inversedBy: 'meetups')]
     #[ORM\JoinColumn(nullable: false)]
     private ?State $state = null;
@@ -74,8 +77,7 @@ class Meetup
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->state = "Created";
-    }
+      }
 
     public function getId(): ?int
     {
@@ -222,7 +224,6 @@ class Meetup
     public function setState(?State $state): static
     {
         $this->state = $state;
-
         return $this;
     }
 }

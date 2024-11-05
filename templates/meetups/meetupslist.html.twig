@@ -9,13 +9,21 @@
     {% for meetup in meetups %}
         <div class="meetup-item">
             <h3>{{ meetup.name }}</h3>
-            <p>State: {{ meetup.state }}</p>
+            <p>State: {{ meetup.state.label }}</p>
 
             {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('meetup_edit_state', {'id': meetup.id}) }}" class="btn btn-primary">
-                    Edit State
-                </a>
+                <form action="{{ path('meetup_update_state', {'id': meetup.id}) }}" method="POST">
+                    <select name="state">
+                        {% for state in states %}
+                            <option value="{{ state.id }}" {% if state.id == meetup.state.id %}selected{% endif %}>
+                                {{ state.label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary">Update State</button>
+                </form>
             {% endif %}
         </div>
     {% endfor %}
+
 {% endblock %}

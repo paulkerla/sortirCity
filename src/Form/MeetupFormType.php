@@ -59,10 +59,10 @@ class MeetupFormType extends AbstractType
                 'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
             ])
 //            ->add('state', EntityType::class, [
-////                'class' => State::class,
-////                'choice_label' => 'label',
-////                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
-////            ])
+//                'class' => State::class,
+//                'choice_label' => 'label',
+//                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+//            ])
  ;
     }
 
