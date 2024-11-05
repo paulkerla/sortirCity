@@ -3,19 +3,19 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-<h1>{{ username }} </h1>
+
+<h1>{{ app.user.username }} </h1>
 <div>
-    <h5>Prénom : {{ firstname }}</h5>
+    <h5>Firstname : {{ app.user.firstname }}</h5>
     <br>
-    <h5>Nom : {{ name }}</h5>
+    <h5>Surname : {{ app.user.surname }}</h5>
     <br>
-    <h5>Téléphone : {{ phonenumber }}</h5>
+    <h5>Phone number : {{ app.user.phonenumber }}</h5>
     <br>
-    <h5>Email : {{ email }}</h5>
+    <h5>Email : {{ app.user.email }}</h5>
     <br>
-    <h5> Ville de rattachement : {{ town }}</h5>
+    <h5> City of operation : {{ app.user.city }}</h5>
     <br>
 </div>
-
-<button type="button">Retour</button>
+    <a href="{{path('app_index')}}">Retour</a>
 {% endblock %}
