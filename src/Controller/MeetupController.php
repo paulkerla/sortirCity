@@ -21,8 +21,14 @@ class MeetupController extends AbstractController
         $meetups = $entityManager->getRepository(Meetup::class)->findAll();
         $states = $entityManager->getRepository(State::class)->findAll();
 
+        $meetupsBySite = [];
+        foreach ($meetups as $meetup) {
+            $siteName = $meetup->getSite()->getName();
+            $meetupsBySite[$siteName][] = $meetup;
+        }
+
         return $this->render('meetups/meetupslist.html.twig', [
-            'meetups' => $meetups,
+            'meetupsBySite' => $meetupsBySite,
             'states' => $states,
         ]);
     }
