@@ -5,19 +5,24 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
+use PharIo\Manifest\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $user = new User();
+        $user->setVerified(false);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -31,13 +36,31 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            return $security->login($user, 'form_login', 'main');
+            $mailadmin = 'paul.kerlau2024@campus-eni.fr';
+            $this->sendEmailToAdmin($user, $mailadmin, $mailer);
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
+    }
+    private function sendEmailToAdmin(User $user, string $adminEmail, MailerInterface $mailer)
+    {
+        $email = (new \Symfony\Component\Mime\Email())
+            ->from('no-reply@sortir-city.com')
+            ->to($adminEmail)
+            ->subject('Nouvelle inscription utilisateur à valider')
+            ->html(
+                '<p>Un nouvel utilisateur s\'est inscrit avec l\'adresse : ' . $user->getEmail() . '<br></p>' .
+                '<p><a href="' . $this->generateUrl('app_admin_validate', [
+                    'id' => $user->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL) . '">Valider l\'utilisateur</a> | ' .
+                '<a href="' . $this->generateUrl('app_admin_reject', [
+                    'id' => $user->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL) . '">Rejeter l\'utilisateur</a></p>'
+            );
+
+        $mailer->send($email);
+        return $this->redirectToRoute('user_login');
     }
 }

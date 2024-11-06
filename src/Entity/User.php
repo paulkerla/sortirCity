@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Site $site = null;
 
+    #[ORM\Column]
+    private ?bool $isVerified = null;
+
     public function __construct()
     {
         $this->meetups = new ArrayCollection();
@@ -236,6 +239,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSite(?Site $site): static
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
