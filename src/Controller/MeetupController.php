@@ -58,26 +58,32 @@ class MeetupController extends AbstractController
 
 
     #[Route('/{id}/unsubscribe', name: 'unsubscribe')]
-    public function unsubscribe(Meetup $meetup): Response
+    public function unsubscribe(Meetup $meetup,EntityManagerInterface $em): Response
     {
 
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
-        if ($user) {
-            // Récupérer l'ID de l'utilisateur
-            $userId = $user->getId();
-
-            // Utiliser l'ID de l'utilisateur pour votre logique
-            // ...
-        } else {
-            return $this->redirectToRoute('login'); // Rediriger vers la page de connexion si non connecté
+        if (!$user) {
+            return $this->redirectToRoute('login');
         }
 
-        // Autres logiques pour se désister de l'événement
-        // ...
+        // Vérifier si l'utilisateur est déjà inscrit à cet événement
+        if (!$meetup->getParticipants()->contains($user)) {
+            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cet événement.');
+            return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
+        }
 
-        return new Response('Désinscription réussie');
+        // Désinscrire l'utilisateur de l'événement
+        $meetup->removeParticipant($user);
+
+        // Sauvegarder les changements dans la base de données
+        $em->flush();
+
+        // Ajouter un message flash de succès
+        $this->addFlash('success', 'Désinscription réussie.');
+
+        return $this->redirectToRoute('meetup_list');
     }
 
     #[Route('/{id}/edit', name: 'edit')]
