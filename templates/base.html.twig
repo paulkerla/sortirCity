@@ -26,21 +26,22 @@
     </a>
 </nav>
 
-{# Affichage des messages flash avec Tailwind CSS #}
 {% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="mb-4 p-4 rounded-lg text-white
-                    {% if label == 'success' %} bg-green-500 {% endif %}
-                    {% if label == 'error' %} bg-red-500 {% endif %}
-                    {% if label == 'warning' %} bg-yellow-500 {% endif %}
-                    {% if label == 'info' %} bg-blue-500 {% endif %}">
+        <div class="mb-4 p-4 rounded-lg
+                    {% if label == 'success' %} bg-green-500 text-white {% endif %}
+                    {% if label == 'error' %} bg-red-500 text-white {% endif %}
+                    {% if label == 'warning' %} bg-yellow-500 text-black {% endif %}
+                    {% if label == 'info' %} bg-blue-500 text-white {% endif %}">
             {{ message }}
         </div>
     {% endfor %}
 {% endfor %}
 
+
 <!-- Content -->
 <main class="container mx-auto px-4">
+
     {% block body %}{% endblock %}
 </main>
 
