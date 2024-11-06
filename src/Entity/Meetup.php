@@ -63,7 +63,8 @@ class Meetup
     #[ORM\JoinColumn(nullable: false)]
     private ?Site $site = null;
 
-    #[ORM\ManyToOne(inversedBy: 'meetups')]
+//    #[ORM\ManyToOne(inversedBy: 'meetups')]
+    #[ORM\ManyToOne(targetEntity: Place::class, cascade: ['persist'], inversedBy: 'meetups')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Place $place = null;
 

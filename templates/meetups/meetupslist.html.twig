@@ -49,6 +49,12 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
+                                    <section class="d-flex justify-content-between align-items-center mb-4">
+                                        <a href="{{ path('meetup_edit', { 'id': meetup.id }) }}" class="btn btn-primary">
+                                            Edit Meetup
+                                        </a>
+                                    </section>
+
 
                                     {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
                                         <form action="{{ path('meetup_update_state', {'id': meetup.id}) }}" method="POST" class="mt-auto">

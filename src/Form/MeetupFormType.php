@@ -9,6 +9,7 @@ use App\Entity\State;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,9 +19,11 @@ class MeetupFormType extends AbstractType
     {
         $builder
             ->add('name', null, [
+                'label' => 'Activity title',
                 'attr' => ['class' => 'form-control mb-3']
-            ])
+                            ])
             ->add('startdatetime', null, [
+                'label' => 'Start date & time',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control mb-3']
             ])
@@ -28,13 +31,16 @@ class MeetupFormType extends AbstractType
                 'attr' => ['class' => 'form-control mb-3']
             ])
             ->add('registrationlimitdate', null, [
+                'label' => 'Registration deadline',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control mb-3']
             ])
             ->add('maxregistrations', null, [
+                'label' => 'Maximum number of participants',
                 'attr' => ['class' => 'form-control mb-3']
             ])
             ->add('meetupinfos', null, [
+                'label' => 'Meetup description and details',
                 'attr' => ['class' => 'form-control mb-3']
             ])
             ->add('participants', EntityType::class, [
@@ -53,18 +59,18 @@ class MeetupFormType extends AbstractType
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-select mb-3']
             ])
-            ->add('place', EntityType::class, [
-                'class' => Place::class,
-                'choice_label' => 'name',
-                'attr' => ['class' => 'form-select mb-3']
-            ])
+//            ->add('place', EntityType::class, [
+//                'class' => Place::class,
+//                'choice_label' => 'name',
+//                'attr' => ['class' => 'form-select mb-3']
+//            ])
+//            ->add('state', HiddenType::class, [
+//                'data' => $options['data']->getState() ? $options['data']->getState()->getId() : null,
+//            ])
+            ->add('place', PlaceFormType::class, [
+                'label' => false
+            ]);
 
-
-        ->add('state', EntityType::class, [
-            'class' => State::class,
-            'choice_label' => 'label',
-            'attr' => ['class' => 'form-select mb-3']
-        ]);
 
     }
 

@@ -43,7 +43,6 @@ class MeetupController extends AbstractController
         if (!$createdState) {
             throw $this->createNotFoundException('The state "Created" was not found.');
         }
-
         $entity->setState($createdState);
 
         $form = $this->createForm(MeetupFormType::class, $entity);
@@ -51,6 +50,7 @@ class MeetupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //`cascade: ['persist']` défini dans l'entité Meetup pour la relation avec Place,
             $entityManager->persist($entity);
             $entityManager->flush();
 
@@ -61,6 +61,7 @@ class MeetupController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
 
     #[Route('/{id}/unsubscribe', name: 'unsubscribe')]
@@ -98,7 +99,7 @@ class MeetupController extends AbstractController
         $user = $this->getUser();
 
         if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('Vous n\'avez pas la permission de modifier ce meetup.');
+            throw $this->createAccessDeniedException('You\'re not allowed to edit this meetup !');
         }
 
         $form = $this->createForm(MeetupFormType::class, $meetup);
@@ -107,14 +108,17 @@ class MeetupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Meetup edited !');
+
             return $this->redirectToRoute('meetup_list');
         }
 
-        return $this->render('meetups/edit_meetup.html.twig', [
+        return $this->render('meetups/editmeetup.html.twig', [
             'form' => $form->createView(),
             'meetup' => $meetup,
         ]);
     }
+
 
     #[Route('/{id}/update-state', name: 'update_state', methods: ['POST'])]
     public function updateState(Request $request, Meetup $meetup, EntityManagerInterface $entityManager): Response
