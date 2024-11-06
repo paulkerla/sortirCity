@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Meetup;
+use App\Entity\Site;
 use App\Entity\State;
 use App\Form\MeetupFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,23 +16,75 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/meetup', name: 'meetup_')]
 class MeetupController extends AbstractController
 {
-    #[Route('/', name: 'list')]
-    public function list(EntityManagerInterface $entityManager): Response
-    {
-        $meetups = $entityManager->getRepository(Meetup::class)->findAll();
-        $states = $entityManager->getRepository(State::class)->findAll();
+//    #[Route('/', name: 'list')]
+//    public function list(EntityManagerInterface $entityManager): Response
+//    {
+//        $meetups = $entityManager->getRepository(Meetup::class)->findAll();
+//        $states = $entityManager->getRepository(State::class)->findAll();
+//        $sites = $entityManager->getRepository(Site::class)->findAll();
+//
+//        $meetupsBySite = [];
+//        foreach ($meetups as $meetup) {
+//            $siteName = $meetup->getSite()->getName();
+//            $meetupsBySite[$siteName][] = $meetup;
+//        }
+//
+//        return $this->render('meetups/meetupslist.html.twig', [
+//            'meetupsBySite' => $meetupsBySite,
+//            'sites' => $sites,
+//            'states' => $states,
+//        ]);
+//    }
 
+    #[Route('/', name: 'list')]
+    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Récupération des états pour le menu de modification d'état et des sites pour la navigation
+        $states = $entityManager->getRepository(State::class)->findAll();
+        $sites = $entityManager->getRepository(Site::class)->findAll();
+
+        // Paramètres pour la pagination et le filtrage par site
+        $siteId = $request->query->get('site'); // Site sélectionné
+        $page = max(1, $request->query->getInt('page', 1)); // Page actuelle
+        $limit = 5; // Nombre de meetups par page
+
+        // Construction de la requête avec filtrage et pagination
+        $meetupRepo = $entityManager->getRepository(Meetup::class);
+        $queryBuilder = $meetupRepo->createQueryBuilder('m')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit)
+            ->orderBy('m.startdatetime', 'ASC'); // Tri par date pour un affichage plus intuitif
+
+        // Ajout du filtre par site si un site est sélectionné
+        if ($siteId) {
+            $queryBuilder->andWhere('m.site = :siteId')
+                ->setParameter('siteId', $siteId);
+        }
+
+        $meetups = $queryBuilder->getQuery()->getResult();
+
+        // Calcul du nombre total de meetups pour la pagination
+        $totalMeetups = $meetupRepo->count(['site' => $siteId]);
+        $totalPages = ceil($totalMeetups / $limit);
+
+        // Préparation de la liste des meetups par site pour conserver l'affichage organisé
         $meetupsBySite = [];
         foreach ($meetups as $meetup) {
             $siteName = $meetup->getSite()->getName();
             $meetupsBySite[$siteName][] = $meetup;
         }
 
+        // Passer les données à la vue avec la pagination et le filtrage
         return $this->render('meetups/meetupslist.html.twig', [
             'meetupsBySite' => $meetupsBySite,
+            'sites' => $sites,
             'states' => $states,
+            'currentSite' => $siteId ? $entityManager->getRepository(Site::class)->find($siteId) : null,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
         ]);
     }
+
 
 
     #[Route('/form', name: 'form')]

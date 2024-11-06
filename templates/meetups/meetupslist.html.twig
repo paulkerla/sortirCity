@@ -4,14 +4,24 @@
 
 {% block body %}
     <main class="container mt-5">
+        <nav class="nav mb-4">
+            <a href="{{ path('meetup_list') }}" class="nav-link {% if currentSite is not defined %}active{% endif %}">
+                Tous les sites
+            </a>
+            {% for site in sites %}
+                <a href="{{ path('meetup_list', { 'site': site.id }) }}" class="nav-link
+    {% if currentSite is not null and currentSite.id == site.id %}active{% endif %}">
+                    {{ site.name }}
+                </a>
+
+            {% endfor %}
+        </nav>
+
         <section class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="display-4 text-dark">Meetups</h1>
-            <a href="{{ path('meetup_form') }}" class="btn btn-primary">
-                New Meetup
-            </a>
+            <a href="{{ path('meetup_form') }}" class="btn btn-primary">New Meetup</a>
         </section>
 
-        {# Boucle pour afficher les meetups par site #}
         {% for site, meetups in meetupsBySite %}
             <section class="mb-5">
                 <h2 class="text-primary">{{ site }}</h2>
@@ -49,12 +59,12 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
+
                                     <section class="d-flex justify-content-between align-items-center mb-4">
                                         <a href="{{ path('meetup_edit', { 'id': meetup.id }) }}" class="btn btn-primary">
                                             Edit Meetup
                                         </a>
                                     </section>
-
 
                                     {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
                                         <form action="{{ path('meetup_update_state', {'id': meetup.id}) }}" method="POST" class="mt-auto">
@@ -69,10 +79,11 @@
                                             <button type="submit" class="btn btn-primary w-100">Update State</button>
                                         </form>
                                     {% endif %}
+
                                     {% if meetup.participants.contains(app.user) %}
-                                    <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-danger">
-                                        Se désinscrire
-                                    </a>
+                                        <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-danger">
+                                            Unsubscribe
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -83,4 +94,3 @@
         {% endfor %}
     </main>
 {% endblock %}
-
