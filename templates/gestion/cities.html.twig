@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cities Management {% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Cities Management</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Zip Code</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for city in cities %}
+                <tr>
+                    <td>{{ city.name }}</td>
+                    <td>{{ city.zipCode }}</td>
+                    <td>
+                        <a href="{{ path('gestion_city_update', {id: city.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ path('gestion_city_delete', {id: city.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this city?');">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No cities found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('gestion_city_create') }}" class="btn btn-success btn-sm">Add city</a>
+    </div>
+{% endblock %}
