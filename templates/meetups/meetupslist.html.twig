@@ -1,29 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MeetupFormController!{% endblock %}
+{% block title %}Meetups{% endblock %}
 
 {% block body %}
-    <a href="{{ path('meetup_form') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
-        New
-    </a>
-    {% for meetup in meetups %}
-        <div class="meetup-item">
-            <h3>{{ meetup.name }}</h3>
-            <p>State: {{ meetup.state.label }}</p>
 
-            {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
-                <form action="{{ path('meetup_update_state', {'id': meetup.id}) }}" method="POST">
-                    <select name="state">
-                        {% for state in states %}
-                            <option value="{{ state.id }}" {% if state.id == meetup.state.id %}selected{% endif %}>
-                                {{ state.label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-primary">Update State</button>
-                </form>
-            {% endif %}
-        </div>
-    {% endfor %}
+    <main class="container mx-auto px-4">
+        <section class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Meetups</h1>
+            <a href="{{ path('meetup_form') }}"
+               class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
+                New Meetup
+            </a>
+        </section>
 
+        <section class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {% for meetup in meetups %}
+
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 space-y-4">
+                    <h3 class="text-2xl font-extrabold text-gray-800 mb-4">{{ meetup.name }}</h3>
+
+                    <p class="text-gray-600 mb-2">📅 <strong>Start Date:</strong>
+                        <span class="font-semibold">{{ meetup.startdatetime|date('d M Y H:i') }}</span>
+                    </p>
+
+                    <p class="text-gray-600 mb-2">⏳ <strong>Duration:</strong>
+                        <span class="font-semibold">{{ meetup.duration }} hours</span>
+                    </p>
+
+                    <p class="text-gray-600 mb-2">📍 <strong>Location:</strong>
+                        <span class="font-semibold">{{ meetup.place.name }}</span>
+                    </p>
+
+                    <p class="text-gray-600 mb-2">👤 <strong>Organizer:</strong>
+                        <span class="font-semibold">{{ meetup.organizer.username }}</span>
+                    </p>
+
+                    <p class="text-gray-600 mb-4">📝 <strong>State:</strong>
+                        <span class="font-semibold">{{ meetup.state.label }}</span>
+                    </p>
+
+                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                        <p class="text-gray-800 font-semibold mb-2">Participants:</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            {% for participant in meetup.participants %}
+                                <li class="pl-2">{{ participant.username }}</li>
+                            {% else %}
+                                <li class="text-gray-500 italic pl-2">No participants yet.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
+                        <form action="{{ path('meetup_update_state', {'id': meetup.id}) }}" method="POST" class="mt-4">
+                            <label for="state" class="block text-gray-700 text-sm font-medium mb-2">Update State:</label>
+                            <select name="state"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent mb-4">
+                                {% for state in states %}
+                                    <option value="{{ state.id }}"
+                                            {% if state.id == meetup.state.id %}selected{% endif %}>
+                                        {{ state.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit"
+                                    class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                                Update State
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+    </main>
 {% endblock %}
+
