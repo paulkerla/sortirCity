@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Places Management {% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Places Management</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>street Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for place in places %}
+                <tr>
+                    <td>{{ place.name }}</td>
+                    <td>{{ place.streetname }}</td>
+                    <td>
+                        <a href="{{ path('gestion_place_delete', {id: place.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this site?');">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No places found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('gestion_place_create') }}" class="btn btn-success btn-sm">Add place</a>
+    </div>
+{% endblock %}

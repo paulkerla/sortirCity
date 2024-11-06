@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Places {% endblock %}
+
+{% block body %}
+
+    <h1 class="display-4 text-dark">Add Place</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.city) }}
+    {{ form_row(form.streetname) }}
+    {{ form_row(form.latitude) }}
+    {{ form_row(form.longitude) }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {{ form_end(form) }}
+
+
+{% endblock %}
