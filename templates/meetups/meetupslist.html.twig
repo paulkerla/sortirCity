@@ -63,6 +63,11 @@
                                             <button type="submit" class="btn btn-primary w-100">Update State</button>
                                         </form>
                                     {% endif %}
+                                    {% if meetup.participants.contains(app.user) %}
+                                    <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-danger">
+                                        Se désinscrire
+                                    </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
