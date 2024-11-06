@@ -43,19 +43,17 @@ class MeetupController extends AbstractController
         $states = $entityManager->getRepository(State::class)->findAll();
         $sites = $entityManager->getRepository(Site::class)->findAll();
 
-        // Paramètres pour la pagination et le filtrage par site
         $siteId = $request->query->get('site'); // Site sélectionné
         $page = max(1, $request->query->getInt('page', 1)); // Page actuelle
-        $limit = 5; // Nombre de meetups par page
+        $limit = 5; // meetups par page
 
         // Construction de la requête avec filtrage et pagination
         $meetupRepo = $entityManager->getRepository(Meetup::class);
         $queryBuilder = $meetupRepo->createQueryBuilder('m')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit)
-            ->orderBy('m.startdatetime', 'ASC'); // Tri par date pour un affichage plus intuitif
+            ->orderBy('m.startdatetime', 'ASC'); //par date ?
 
-        // Ajout du filtre par site si un site est sélectionné
         if ($siteId) {
             $queryBuilder->andWhere('m.site = :siteId')
                 ->setParameter('siteId', $siteId);
@@ -73,8 +71,6 @@ class MeetupController extends AbstractController
             $siteName = $meetup->getSite()->getName();
             $meetupsBySite[$siteName][] = $meetup;
         }
-
-        // Passer les données à la vue avec la pagination et le filtrage
         return $this->render('meetups/meetupslist.html.twig', [
             'meetupsBySite' => $meetupsBySite,
             'sites' => $sites,
