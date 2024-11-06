@@ -26,17 +26,22 @@
     </a>
 </nav>
 
-{# Affichage des messages flash #}
-{% for label, messages in app.session.flashBag.all() %}
+{% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="alert alert-{{ label }} bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+        <div class="mb-4 p-4 rounded-lg
+                    {% if label == 'success' %} bg-green-500 text-white {% endif %}
+                    {% if label == 'error' %} bg-red-500 text-white {% endif %}
+                    {% if label == 'warning' %} bg-yellow-500 text-black {% endif %}
+                    {% if label == 'info' %} bg-blue-500 text-white {% endif %}">
             {{ message }}
         </div>
     {% endfor %}
 {% endfor %}
 
+
 <!-- Content -->
 <main class="container mx-auto px-4">
+
     {% block body %}{% endblock %}
 </main>
 

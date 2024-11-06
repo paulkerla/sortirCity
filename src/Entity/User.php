@@ -47,9 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 10)]
     private ?string $phonenumber = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $city = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarurl = null;
 
@@ -188,18 +185,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhonenumber(string $phonenumber): static
     {
         $this->phonenumber = $phonenumber;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): static
-    {
-        $this->city = $city;
 
         return $this;
     }
