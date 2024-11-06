@@ -26,10 +26,14 @@
     </a>
 </nav>
 
-{# Affichage des messages flash #}
-{% for label, messages in app.session.flashBag.all() %}
+{# Affichage des messages flash avec Tailwind CSS #}
+{% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="alert alert-{{ label }} bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+        <div class="mb-4 p-4 rounded-lg text-white
+                    {% if label == 'success' %} bg-green-500 {% endif %}
+                    {% if label == 'error' %} bg-red-500 {% endif %}
+                    {% if label == 'warning' %} bg-yellow-500 {% endif %}
+                    {% if label == 'info' %} bg-blue-500 {% endif %}">
             {{ message }}
         </div>
     {% endfor %}

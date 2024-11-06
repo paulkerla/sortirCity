@@ -28,6 +28,7 @@ security:
                 enable_csrf: false
             logout:
                 path: user_logout
+                target: user_login
                 # where to redirect after logout
                 # target: app_any_route
 
