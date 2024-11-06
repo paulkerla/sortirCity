@@ -27,25 +27,25 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                'attr' => ['class' => 'form-select mb-3']
             ])
             ->add('firstname', null, [
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                'attr' => ['class' => 'form-select mb-3']
             ])
             ->add('surname', null, [
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                'attr' => ['class' => 'form-select mb-3']
             ])
             ->add('email', EmailType::class, [
+                'attr' => ['class' => 'form-select mb-3'],
                 'constraints' => [
                     new NotBlank(['message' => 'Please enter your email'])
-                ],
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password', 'class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500'],
+                'attr' => ['autocomplete' => 'new-password', 'class' => 'form-select mb-3'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
@@ -61,20 +61,22 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
-                'choice_label' => '',
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-select mb-3']
             ])
             ->add('phonenumber', TelType::class, [
                 'label' => 'Phone number',
-                'attr' => ['class' => 'block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500']
+                'attr' => ['class' => 'form-select mb-3']
             ])
 
-            ->add('avatarUrl', FileType::class, [
+            ->add('avatarurl', FileType::class, [
                 'label' => 'Photo de profil (jpg, png)',
                 'required' => false,
+                'attr' => ['class' => 'form-select mb-3']
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Sign up',
+                'attr' => ['class' => 'btn btn-primary w-100']
                 ]);
         ;
         ;

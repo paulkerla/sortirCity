@@ -15,5 +15,8 @@
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
+        {{ form_row(registrationForm.site) }}
+        {{ form_row(registrationForm.phonenumber) }}
+        {{ form_row(registrationForm.avatarurl) }}
     {{ form_end(registrationForm) }}
 {% endblock %}
