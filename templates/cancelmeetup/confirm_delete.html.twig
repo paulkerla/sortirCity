@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirm Meetup Deletion{% endblock %}
+
+{% block body %}
+    <main class="container mt-5">
+        <h1 class="display-4 text-danger">Delete Meetup</h1>
+
+        <p>Are you sure you want to delete the meetup <strong>{{ meetup.name }}</strong>?</p>
+
+        <div class="mb-4">
+            <p><strong>Date:</strong> {{ meetup.startdatetime|date('d M Y H:i') }}</p>
+            <p><strong>Location:</strong> {{ meetup.place.name }}</p>
+            <p><strong>Organizer:</strong> {{ meetup.organizer.username }}</p>
+            <p><strong>Details:</strong> {{ meetup.meetupinfos }}</p>
+        </div>
+
+        <form action="{{ path('meetup_delete', { 'id': meetup.id }) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_meetup_' ~ meetup.id) }}">
+
+            <div class="mb-3">
+                <label for="reason" class="form-label">Reason for Deletion</label>
+                <textarea id="reason" name="reason" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+            <a href="{{ path('meetup_list') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </main>
+{% endblock %}
