@@ -267,8 +267,9 @@ class Meetup
         $interval = new \DateInterval('PT' . $this->duration . 'M');
         $meetupEnd = (clone $this->startdatetime )->add($interval);
 
+        $archiveDate = (clone $this->startdatetime)->modify('+1 month');
 
-        if ($this->startdatetime < new \DateTime() && $this->startdatetime <= $meetupEnd && $statePassed !== null) {
+        if (new \DateTime() > $meetupEnd && new \DateTime() <= $archiveDate && $statePassed !== null) {
             $this->setState($statePassed);
         }
     }
