@@ -230,7 +230,7 @@ class Meetup
         return $this;
     }
 
-    //fonction de changement de statut lorsque que la date est passée
+
     // Méthode qui met à jour le statut du meetup si la date limite d'inscription est dépassée
     public function updateStatusIfDeadlinePassed(EntityManagerInterface $entityManager): void
     {
@@ -240,6 +240,21 @@ class Meetup
         // Vérifiez si la date d'inscription est dépassée et mettez à jour le statut
         if ($this->registrationlimitdate < new \DateTime() && $closedState !== null) {
             $this->setState($closedState); // Mettre à jour le statut du meetup avec l'état "closed"
+        }
+    }
+
+    // Méthode qui met à jour le statut du meetup si la date est dépassée d'un mois
+    public function updateStatusIfMeetupArchive(EntityManagerInterface $entityManager): void
+    {
+        // Utiliser l'EntityManager pour récupérer le repository de l'entité State
+        $passedArchive = $entityManager->getRepository(State::class)->find(7); // Trouver l'état avec ID 5 (Passed)
+
+        $oneMonthLater = new \DateTime();
+        $oneMonthLater->modify('+1 month'); // Date actuelle + 1 mois
+
+        // Vérifier si la date d'inscription est dépassée et si la date d'inscription est supérieure à aujourd'hui + 1 mois
+        if ($this->startdatetime < new \DateTime() && $this->startdatetime <= $oneMonthLater && $passedArchive !== null) {
+            $this->setState($passedArchive); // Mettre à jour le statut du meetup avec l'état "closed" (ou archive)
         }
     }
 }
