@@ -123,7 +123,7 @@ class MeetupController extends AbstractController
 
         // Vérifier si l'utilisateur est déjà inscrit à cet événement
         if (!$meetup->getParticipants()->contains($user)) {
-            $this->addFlash('error', 'Vous n\'êtes pas inscrit à cet événement.');
+            $this->addFlash('error', 'You are not registered for this event.');
             return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
         }
 
@@ -134,7 +134,36 @@ class MeetupController extends AbstractController
         $em->flush();
 
         // Ajouter un message flash de succès
-        $this->addFlash('success', 'Désinscription réussie.');
+        $this->addFlash('success', 'Unregistration successful.');
+
+        return $this->redirectToRoute('meetup_list');
+    }
+
+    #[Route('/{id}/subscribe', name: 'subscribe')]
+    public function subscribe(Meetup $meetup, EntityManagerInterface $em): Response
+    {
+
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
+        // Vérifier si l'utilisateur est déjà inscrit à cet événement
+        if ($meetup->getParticipants()->contains($user)) {
+            $this->addFlash('error', 'You are already registered for this event.');
+            return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
+        }
+
+        // Désinscrire l'utilisateur de l'événement
+        $meetup->addParticipant($user);
+
+        // Sauvegarder les changements dans la base de données
+        $em->flush();
+
+        // Ajouter un message flash de succès
+        $this->addFlash('success', 'Registration successful.');
 
         return $this->redirectToRoute('meetup_list');
     }

@@ -84,6 +84,10 @@
                                         <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-danger">
                                             Unsubscribe
                                         </a>
+                                    {% else %}
+                                        <a href="{{ path('meetup_subscribe', {'id': meetup.id}) }}" class="btn btn-success">
+                                            Subscribe
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>
