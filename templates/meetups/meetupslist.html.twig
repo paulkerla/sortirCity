@@ -37,7 +37,7 @@
                                         <span class="fw-semibold">{{ meetup.startdatetime|date('d M Y H:i') }}</span>
                                     </p>
                                     <p class="text-muted mb-2">⏳ <strong>Duration:</strong>
-                                        <span class="fw-semibold">{{ meetup.duration }} hours</span>
+                                        <span class="fw-semibold">{{ meetup.duration }} minutes</span>
                                     </p>
                                     <p class="text-muted mb-2">📍 <strong>Location:</strong>
                                         <span class="fw-semibold">{{ meetup.place.name }}</span>
@@ -79,12 +79,14 @@
                                             <button type="submit" class="btn btn-primary w-100">Update State</button>
                                         </form>
                                     {% endif %}
+                                    
 
                                     {% if meetup.participants.contains(app.user) %}
                                         <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-danger">
                                             Unsubscribe
                                         </a>
-                                    {% else %}
+
+                                    {% elseif meetup.state.label != 'Closed' %}
                                         <a href="{{ path('meetup_subscribe', {'id': meetup.id}) }}" class="btn btn-success">
                                             Subscribe
                                         </a>

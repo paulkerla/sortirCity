@@ -42,6 +42,7 @@ class MeetupController extends AbstractController
         $states = $entityManager->getRepository(State::class)->findAll();
         $sites = $entityManager->getRepository(Site::class)->findAll();
 
+
         $siteId = $request->query->get('site');
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 5; // meetups max par page
@@ -59,6 +60,13 @@ class MeetupController extends AbstractController
         }
 
         $meetups = $queryBuilder->getQuery()->getResult();
+
+        foreach ($meetups as $meetup) {
+            $meetup->updateStatusIfDeadlinePassed($entityManager); // Passer l'EntityManager ici
+            $entityManager->persist($meetup);
+        }
+
+        $entityManager->flush(); // Persist les modifications
 
         // Calcul du nombre total de meetups pour la pagination
         $totalMeetups = $meetupRepo->count(['site' => $siteId]);
