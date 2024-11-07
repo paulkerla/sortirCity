@@ -6,6 +6,8 @@ use App\Repository\MeetupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -226,5 +228,18 @@ class Meetup
     {
         $this->state = $state;
         return $this;
+    }
+
+    //fonction de changement de statut lorsque que la date est passée
+    // Méthode qui met à jour le statut du meetup si la date limite d'inscription est dépassée
+    public function updateStatusIfDeadlinePassed(EntityManagerInterface $entityManager): void
+    {
+        // Utiliser l'EntityManager pour récupérer le repository de l'entité State
+        $closedState = $entityManager->getRepository(State::class)->find(3); // Trouver l'état avec ID 3 (Closed)
+
+        // Vérifiez si la date d'inscription est dépassée et mettez à jour le statut
+        if ($this->registrationlimitdate < new \DateTime() && $closedState !== null) {
+            $this->setState($closedState); // Mettre à jour le statut du meetup avec l'état "closed"
+        }
     }
 }
