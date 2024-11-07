@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="container mt-5">
+        <a href="{{ path('gestion_index') }}" class="btn btn-secondary btn-sm"> <-- </a>
         <h1 class="mb-4">Places Management</h1>
         <table class="table table-striped">
             <thead>
@@ -19,7 +20,6 @@
                     <td>{{ place.name }}</td>
                     <td>{{ place.streetname }}</td>
                     <td>
-                        <a href="{{ path('gestion_place_archive', {id: place.id}) }}" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to archive this place?');">Archive</a>
                         <a href="{{ path('gestion_place_delete', {id: place.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this place?');">Delete</a>
                     </td>
                 </tr>

@@ -188,13 +188,5 @@ class GestionController extends AbstractController
         return $this->redirectToRoute('gestion_places');
 
     }
-    #[Route('place/{id}/archive',name: 'place_archive')]
-    public function archivePlace(EntityManagerInterface $em,Place $place):Response
-    {
-//        TODO méthode archivage
-
-        return $this->redirectToRoute('gestion_places');
-
-    }
 
 }

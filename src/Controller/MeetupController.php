@@ -130,6 +130,7 @@ class MeetupController extends AbstractController
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
+
         if (!$user) {
             return $this->redirectToRoute('login');
         }
