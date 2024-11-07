@@ -71,6 +71,11 @@ class MeetupController extends AbstractController
             $entityManager->persist($meetup);
         }
 
+        foreach ($meetups as $meetup) {
+            $meetup->updateStatusIfMeetupPassed($entityManager);
+            $entityManager->persist($meetup);
+        }
+
         $entityManager->flush(); // Persist les modifications
 
         // Calcul du nombre total de meetups pour la pagination
