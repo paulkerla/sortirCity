@@ -39,15 +39,14 @@ class MeetupController extends AbstractController
     #[Route('/', name: 'list')]
     public function list(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Récupération des états pour le menu de modification d'état et des sites pour la navigation
         $states = $entityManager->getRepository(State::class)->findAll();
         $sites = $entityManager->getRepository(Site::class)->findAll();
 
-        $siteId = $request->query->get('site'); // Site sélectionné
-        $page = max(1, $request->query->getInt('page', 1)); // Page actuelle
-        $limit = 5; // meetups par page
+        $siteId = $request->query->get('site');
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = 5; // meetups max par page
 
-        // Construction de la requête avec filtrage et pagination
+        // requête avec filtrage et pagination
         $meetupRepo = $entityManager->getRepository(Meetup::class);
         $queryBuilder = $meetupRepo->createQueryBuilder('m')
             ->setMaxResults($limit)
@@ -82,7 +81,6 @@ class MeetupController extends AbstractController
     }
 
 
-
     #[Route('/form', name: 'form')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -112,9 +110,8 @@ class MeetupController extends AbstractController
     }
 
 
-
     #[Route('/{id}/unsubscribe', name: 'unsubscribe')]
-    public function unsubscribe(Meetup $meetup,EntityManagerInterface $em): Response
+    public function unsubscribe(Meetup $meetup, EntityManagerInterface $em): Response
     {
 
         // Récupérer l'utilisateur connecté
