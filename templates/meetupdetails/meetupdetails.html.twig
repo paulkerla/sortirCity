@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meetup Details{% endblock %}
+
+{% block body %}
+    <main class="container mt-5">
+        <h1 class="display-4">{{ meetup.name }}</h1>
+        <p><strong>Date:</strong> {{ meetup.startdatetime|date('d M Y H:i') }}</p>
+        <p><strong>Duration:</strong> {{ meetup.duration }} minutes</p>
+        <p><strong>Location:</strong> {{ meetup.place.name }}</p>
+        <p><strong>Organizer:</strong> {{ meetup.organizer.username }}</p>
+        <p><strong>Details:</strong> {{ meetup.meetupinfos}}</p>
+        <p><strong>State:</strong> {{ meetup.state.label }}</p>
+
+        <div class="bg-light p-3 rounded mb-3">
+            <h3>Participants</h3>
+            <ul class="list-unstyled text-muted">
+                {% for participant in meetup.participants %}
+                    <li>{{ participant.username }}</li>
+                {% else %}
+                    <li class="fst-italic">No participants yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if app.user == meetup.organizer or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('meetup_edit', { 'id': meetup.id }) }}" class="btn btn-primary">Edit</a>
+            <form action="{{ path('meetup_delete', { 'id': meetup.id }) }}" method="post" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_meetup_' ~ meetup.id) }}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this meetup?');">
+                    Delete
+                </button>
+            </form>
+        {% endif %}
+    </main>
+{% endblock %}

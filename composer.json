@@ -7,6 +7,7 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "composer/installers": "^2.3",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -47,6 +48,7 @@
     },
     "config": {
         "allow-plugins": {
+            "composer/installers": true,
             "php-http/discovery": true,
             "symfony/flex": true,
             "symfony/runtime": true
