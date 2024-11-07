@@ -20,11 +20,11 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_index');
         }
 
-        $user->setIsVerified(true);
+        $user->setVerified(true);
         $entityManager->flush();
 
         $this->addFlash('success', 'Utilisateur validé avec succès.');
-        return $this->render('admin/index.html.twig', [
+        return $this->render('main/home.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }
@@ -42,7 +42,7 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Utilisateur rejeté et supprimé.');
-        return $this->render('admin/index.html.twig', [
+        return $this->render('main/home.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }

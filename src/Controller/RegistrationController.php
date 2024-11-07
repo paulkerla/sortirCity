@@ -7,10 +7,12 @@ use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use PharIo\Manifest\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,6 +20,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationController extends AbstractController
 {
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
@@ -44,9 +49,14 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form,
         ]);
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
     private function sendEmailToAdmin(User $user, string $adminEmail, MailerInterface $mailer)
     {
-        $email = (new \Symfony\Component\Mime\Email())
+
+        $email = (new TemplatedEmail())
             ->from('no-reply@sortir-city.com')
             ->to($adminEmail)
             ->subject('Nouvelle inscription utilisateur à valider')
@@ -61,6 +71,7 @@ class RegistrationController extends AbstractController
             );
 
         $mailer->send($email);
+        $this->addFlash('success', 'Inscription réalisée avec succès. En attente de la validation de l\'admin');
         return $this->redirectToRoute('user_login');
     }
 }
