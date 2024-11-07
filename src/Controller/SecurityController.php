@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -21,7 +22,15 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+
         if ($this->getUser()) {
+            $user=$this->getUser();
+            $userConnected=$user->isVerified();
+            if (!$userConnected)
+            {
+                $this->addFlash('error', 'You\'re not verified by admin');
+                return $this->redirectToRoute('user_login');
+            }
 
             // Rediriger vers la route "after_login"
             return $this->redirectToRoute('user_after_login');
