@@ -1,7 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-<p>home</p>
+    <main class="container mt-5">
+        <h1 class="display-4 text-dark mb-4">Upcoming Meetups</h1>
+
+        <div class="row">
+            {% for meetup in meetups %}
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h4 text-dark fw-bold mb-3">{{ meetup.name }}</h3>
+                            <p class="text-muted mb-2">📅 <strong>Start Date:</strong>
+                                <span class="fw-semibold">{{ meetup.startdatetime|date('d M Y H:i') }}</span>
+                            </p>
+                            <p class="text-muted mb-2">📍 <strong>Location:</strong>
+                                <span class="fw-semibold">{{ meetup.place.name }}</span>
+                            </p>
+                            <p class="text-muted mb-4">📝 <strong>State:</strong>
+                                <span class="fw-semibold">{{ meetup.state.label }}</span>
+                            </p>
+{#                            <a href="{{ path('meetup_detail', { 'id': meetup.id }) }}" class="btn btn-primary mt-auto">#}
+{#                                View Details#}
+{#                            </a>#}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted">No upcoming meetups available.</p>
+            {% endfor %}
+        </div>
+    </main>
 {% endblock %}
