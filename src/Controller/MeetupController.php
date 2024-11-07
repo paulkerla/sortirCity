@@ -62,7 +62,12 @@ class MeetupController extends AbstractController
         $meetups = $queryBuilder->getQuery()->getResult();
 
         foreach ($meetups as $meetup) {
-            $meetup->updateStatusIfDeadlinePassed($entityManager); // Passer l'EntityManager ici
+            $meetup->updateStatusIfDeadlinePassed($entityManager);
+            $entityManager->persist($meetup);
+        }
+
+        foreach ($meetups as $meetup) {
+            $meetup->updateStatusIfMeetupArchive($entityManager);
             $entityManager->persist($meetup);
         }
 
