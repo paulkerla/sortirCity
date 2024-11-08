@@ -43,7 +43,9 @@ class MeetupController extends AbstractController
         $sites = $entityManager->getRepository(Site::class)->findAll();
 
         $siteId = $request->query->get('site');
-        $search = $request->query->get('search', ''); // Get the search term, default to an empty string
+        $search = $request->query->get('search', '');
+        $dateMin = $request->query->get('date_min', '');
+        $dateMax = $request->query->get('date_max', '');
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 5;
 
@@ -51,7 +53,7 @@ class MeetupController extends AbstractController
         $queryBuilder = $meetupRepo->createQueryBuilder('m')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit)
-            ->orderBy('m.startdatetime', 'ASC'); // Order by start date
+            ->orderBy('m.startdatetime', 'ASC');
 
         if ($siteId) {
             $queryBuilder->andWhere('m.site = :siteId')
@@ -63,6 +65,11 @@ class MeetupController extends AbstractController
                 ->setParameter('search', strtolower($search) . '%');
         }
 
+        if ($dateMin && $dateMax) {
+            $queryBuilder->andWhere('m.startdatetime BETWEEN :dateMin AND :dateMax')
+                ->setParameter('dateMin', new \DateTime($dateMin))
+                ->setParameter('dateMax', new \DateTime($dateMax));
+        }
         $meetups = $queryBuilder->getQuery()->getResult();
 
         foreach ($meetups as $meetup) {
@@ -92,7 +99,9 @@ class MeetupController extends AbstractController
             'currentSite' => $siteId ? $entityManager->getRepository(Site::class)->find($siteId) : null,
             'currentPage' => $page,
             'totalPages' => $totalPages,
-            'search' => $search, // Send the search term to the template
+            'search' => $search,
+            'dateMin' => $dateMin,
+            'dateMax' => $dateMax,
         ]);
     }
 

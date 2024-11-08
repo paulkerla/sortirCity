@@ -17,14 +17,21 @@
         </section>
 
         <form method="get" action="{{ path('meetup_list') }}" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search meetups..."
-                       value="{{ search }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" name="search" value="{{ search }}" placeholder="Search by name" class="form-control mb-2">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="date_min" value="{{ dateMin }}" placeholder="Start Date" class="form-control mb-2">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="date_max" value="{{ dateMax }}" placeholder="End Date" class="form-control mb-2">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
             </div>
         </form>
-
-
 
         {% for site, meetups in meetupsBySite %}
             <section class="mb-5">
