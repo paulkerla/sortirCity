@@ -3,15 +3,29 @@
 {% block title %} Management {% endblock %}
 
 {% block body %}
-    <h1 class="display-4 text-dark">Management</h1>
-    <a href="{{ path('gestion_cities')}}" class="btn btn-primary">
+    <h1 class="display-4 text-dark">Management</h1><br>
+
+    <p>click here to manage places:</p>
+    <a href="{{ path('gestion_cities')}}" class="btn btn-primary mb-3">
         manage cities
     </a>
-    <a href="{{ path('gestion_sites')}}" class="btn btn-primary">
+
+    <a href="{{ path('gestion_sites')}}" class="btn btn-primary mb-3">
         manage sites
     </a>
-    <a href="{{ path('gestion_places')}}" class="btn btn-primary">
+
+    <a href="{{ path('gestion_places')}}" class="btn btn-primary mb-3">
         manage places
+    </a>
+
+    <p>click here to manage users:</p>
+
+    <a href="{{ path('gestion_users')}}" class="btn btn-primary mb-3">
+        manage users
+    </a>
+    <p>click here to manage meetups:</p>
+    <a href="{{ path('gestion_places')}}" class="btn btn-primary mb-3">
+        manage meetups
     </a>
 
 {% endblock %}
