@@ -3,8 +3,13 @@
 {% block title %}Cities Management {% endblock %}
 
 {% block body %}
+
     <div class="container mt-5">
-        <a href="{{ path('gestion_index') }}" class="btn btn-secondary btn-sm"> <-- </a>
+        <a href="{{ path('gestion_index') }}" class="btn btn-secondary btn-sm mb-3"> <-- </a>
+        <form method="get" action="{{ path('gestion_cities') }}" class="mb-3">
+            <input type="text" name="search" placeholder="Find a city" value="{{ search }}">
+            <button type="submit">Search</button>
+        </form>
         <h1 class="mb-4">Cities Management</h1>
         <table class="table table-striped">
             <thead>
@@ -31,6 +36,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('gestion_city_create') }}" class="btn btn-success btn-sm">Add city</a>
+        <a href="{{ path('gestion_city_create') }}" class="btn btn-success btn-sm mt-3">Add city</a>
     </div>
 {% endblock %}

@@ -31,12 +31,26 @@ class GestionController extends AbstractController
 
 //    Gestion des villes
     #[Route('/cities', name: 'cities')]
-    public function city(CityRepository $cityRepository): Response
+    public function city(Request $request,CityRepository $cityRepository): Response
     {
-        $cities = $cityRepository->findAll();
+        // Récupère le terme de recherche depuis la requête
+        $search = $request->query->get('search', '');
+
+        // Utilise le QueryBuilder pour filtrer les résultats
+        $queryBuilder = $cityRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $queryBuilder
+                ->where('c.name LIKE :name')
+                ->setParameter('name', strtolower($search) . '%');
+        }
+
+        $queryBuilder->orderBy('c.name', 'ASC');
+        $cities = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/cities.html.twig', [
             'cities'=>$cities,
+            'search' => $search,
         ]);
     }
 
@@ -91,14 +105,28 @@ class GestionController extends AbstractController
 
     //    Gestion des sites
     #[Route('/sites', name: 'sites')]
-    public function site(SiteRepository $siteRepository ): Response
+    public function site(Request $request,SiteRepository $siteRepository ): Response
     {
-        $sites = $siteRepository->findAll();
+        $search = $request->query->get('search', '');
+        $queryBuilder = $siteRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $queryBuilder
+                ->where('c.name LIKE :name')
+                ->setParameter('name', strtolower($search) . '%');
+        }
+
+        $queryBuilder->orderBy('c.name', 'ASC');
+        $sites = $queryBuilder->getQuery()->getResult();
+
 
         return $this->render('gestion/sites.html.twig', [
             'sites'=>$sites,
+            'search' => $search,
         ]);
     }
+
+
     #[Route('site/create',name: 'site_create')]
     public function createSite(Request $request,EntityManagerInterface $em):Response
     {
@@ -150,12 +178,23 @@ class GestionController extends AbstractController
     //    Gestion des lieux
 
     #[Route('/places', name: 'places')]
-    public function places(PlaceRepository $placeRepository ): Response
+    public function places(Request $request,PlaceRepository $placeRepository ): Response
     {
-        $places = $placeRepository->findAll();
+        $search = $request->query->get('search', '');
+        $queryBuilder = $placeRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $queryBuilder
+                ->where('c.name LIKE :name')
+                ->setParameter('name', strtolower($search) . '%');
+        }
+
+        $queryBuilder->orderBy('c.name', 'ASC');
+        $places = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/places.html.twig', [
             'places'=>$places,
+            'search' => $search,
         ]);
     }
 
