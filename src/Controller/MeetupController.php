@@ -110,12 +110,17 @@ class MeetupController extends AbstractController
         }
         $entity->setState($createdState);
 
+        // Définit l'utilisateur connecté comme organisateur
+        $user = $this->getUser();
+        if ($user) {
+            $entity->setOrganizer($user);
+        }
+
         $form = $this->createForm(MeetupFormType::class, $entity);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //`cascade: ['persist']` défini dans l'entité Meetup pour la relation avec Place,
             $entityManager->persist($entity);
             $entityManager->flush();
 
@@ -126,6 +131,7 @@ class MeetupController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
 
     #[Route('/{id}/unsubscribe', name: 'unsubscribe')]

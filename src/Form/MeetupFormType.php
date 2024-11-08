@@ -49,11 +49,11 @@ class MeetupFormType extends AbstractType
                 'multiple' => true,
                 'attr' => ['class' => 'form-select mb-3']
             ])
-            ->add('organizer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'username',
-                'attr' => ['class' => 'form-select mb-3']
-            ])
+//            ->add('organizer', EntityType::class, [
+//                'class' => User::class,
+//                'choice_label' => 'username',
+//                'attr' => ['class' => 'form-select mb-3']
+//            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'name',
