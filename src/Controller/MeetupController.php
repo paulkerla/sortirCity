@@ -42,52 +42,49 @@ class MeetupController extends AbstractController
         $states = $entityManager->getRepository(State::class)->findAll();
         $sites = $entityManager->getRepository(Site::class)->findAll();
 
-
         $siteId = $request->query->get('site');
+        $search = $request->query->get('search', ''); // Get the search term, default to an empty string
         $page = max(1, $request->query->getInt('page', 1));
-        $limit = 5; // meetups max par page
+        $limit = 5;
 
-        // requête avec filtrage et pagination
         $meetupRepo = $entityManager->getRepository(Meetup::class);
         $queryBuilder = $meetupRepo->createQueryBuilder('m')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit)
-            ->orderBy('m.startdatetime', 'ASC'); //par date ?
+            ->orderBy('m.startdatetime', 'ASC'); // Order by start date
 
         if ($siteId) {
             $queryBuilder->andWhere('m.site = :siteId')
                 ->setParameter('siteId', $siteId);
         }
 
+        if ($search) {
+            $queryBuilder->andWhere('LOWER(m.name) LIKE :search')
+                ->setParameter('search', strtolower($search) . '%');
+        }
+
         $meetups = $queryBuilder->getQuery()->getResult();
 
         foreach ($meetups as $meetup) {
             $meetup->updateStatusIfDeadlinePassed($entityManager);
-            $entityManager->persist($meetup);
-        }
-
-        foreach ($meetups as $meetup) {
             $meetup->updateStatusIfMeetupArchive($entityManager);
-            $entityManager->persist($meetup);
-        }
-
-        foreach ($meetups as $meetup) {
             $meetup->updateStatusIfMeetupPassed($entityManager);
             $entityManager->persist($meetup);
         }
 
-        $entityManager->flush(); // Persist les modifications
+        $entityManager->flush(); // Persist status updates
 
-        // Calcul du nombre total de meetups pour la pagination
+        // Calculate total meetups for pagination
         $totalMeetups = $meetupRepo->count(['site' => $siteId]);
         $totalPages = ceil($totalMeetups / $limit);
 
-        // Préparation de la liste des meetups par site pour conserver l'affichage organisé
+        // Organize meetups by site for structured display
         $meetupsBySite = [];
         foreach ($meetups as $meetup) {
             $siteName = $meetup->getSite()->getName();
             $meetupsBySite[$siteName][] = $meetup;
         }
+
         return $this->render('meetups/meetupslist.html.twig', [
             'meetupsBySite' => $meetupsBySite,
             'sites' => $sites,
@@ -95,8 +92,10 @@ class MeetupController extends AbstractController
             'currentSite' => $siteId ? $entityManager->getRepository(Site::class)->find($siteId) : null,
             'currentPage' => $page,
             'totalPages' => $totalPages,
+            'search' => $search, // Send the search term to the template
         ]);
     }
+
 
 
     #[Route('/form', name: 'form')]

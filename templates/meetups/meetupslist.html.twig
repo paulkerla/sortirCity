@@ -16,6 +16,16 @@
             <a href="{{ path('meetup_form') }}" class="btn btn-primary">New Meetup</a>
         </section>
 
+        <form method="get" action="{{ path('meetup_list') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search meetups..."
+                       value="{{ search }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
+
+
         {% for site, meetups in meetupsBySite %}
             <section class="mb-5">
                 <h2 class="text-primary">{{ site }}</h2>
