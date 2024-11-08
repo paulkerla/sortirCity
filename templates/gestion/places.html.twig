@@ -6,9 +6,11 @@
     <div class="container mt-5">
         <a href="{{ path('gestion_index') }}" class="btn btn-secondary btn-sm mb-3"> <-- </a>
 
-        <form method="get" action="{{ path('gestion_places') }}" class="mb-3">
-            <input type="text" name="search" placeholder="Find a place" value="{{ search }}">
-            <button type="submit">Search</button>
+        <form method="get" action="{{ path('gestion_places') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Find a place" value="{{ search }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
         </form>
         <h1 class="mb-4">Places Management</h1>
         <table class="table table-striped">

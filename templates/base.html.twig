@@ -28,9 +28,11 @@
                     <li class="nav-item">
                         <a href="{{ path('meetup_list') }}" class="nav-link">Meetups</a>
                     </li>
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a href="{{ path('gestion_index') }}" class="nav-link">management</a>
                     </li>
+                {% endif %}
                     <li class="nav-item">
                         <a href="{{ path('user_logout') }}" class="nav-link">Logout</a>
                     </li>

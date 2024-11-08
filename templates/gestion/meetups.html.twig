@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Meetups Management {% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <a href="{{ path('gestion_index') }}" class="btn btn-secondary btn-sm mb-3"> <-- </a>
+
+        <form method="get" action="{{ path('gestion_meetups') }}" class="mb-4">
+            <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Find a meetup by name" value="{{ search }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+        <h1 class="mb-4">Meetups</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Place</th>
+                <th>State</th>
+                <th>Organizer</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for meetup in meetups %}
+                <tr>
+                    <td>{{ meetup.name }}</td>
+                    <td>{{ meetup.startdatetime|date('d M Y H:i') }}</td>
+                    <td> {{ meetup.place.name }} </td>
+                    <td> {{ meetup.state.label }} </td>
+                    <td> {{ meetup.organizer.username }} </td>
+                    <td>
+                        <a href="{{ path('meetup_delete', {id: meetup.id}) }}" class="btn btn-danger btn-sm mb-3" onclick="return confirm('Are you sure you want to canceled this meetup?');">Delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No places found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('meetup_form') }}" class="btn btn-success btn-sm">Add Meetup</a>
+    </div>
+{% endblock %}
