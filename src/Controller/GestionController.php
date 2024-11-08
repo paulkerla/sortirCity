@@ -6,12 +6,15 @@ namespace App\Controller;
 use App\Entity\City;
 use App\Entity\Place;
 use App\Entity\Site;
+use App\Entity\User;
 use App\Form\CityType;
 use App\Form\PlaceFormType;
+use App\Form\RegistrationFormType;
 use App\Form\SiteType;
 use App\Repository\CityRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\SiteRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -225,6 +228,82 @@ class GestionController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Place deleted successfully !');
         return $this->redirectToRoute('gestion_places');
+
+    }
+    //gestion des utilisateurs
+    #[Route('/users', name: 'users')]
+    public function user(Request $request,UserRepository $userRepository): Response
+    {
+        // Récupère le terme de recherche depuis la requête
+        $search = $request->query->get('search', '');
+
+        // Utilise le QueryBuilder pour filtrer les résultats
+        $queryBuilder = $userRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $queryBuilder
+                ->where('c.email LIKE :email')
+                ->setParameter('email', strtolower($search) . '%');
+        }
+
+        $queryBuilder->orderBy('c.email', 'ASC');
+        $users = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('gestion/users.html.twig', [
+            'users'=>$users,
+            'search' => $search,
+        ]);
+    }
+
+    #[Route('user/create',name: 'user_create')]
+    public function createUser(Request $request,EntityManagerInterface $em):Response
+    {
+        $user = new User();
+
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'A new user has been created successfully !');
+            return $this->redirectToRoute('gestion_users');
+        }
+        return $this->render('registration/register.html.twig', [
+            'registrationForm'=>$form,
+        ]);
+
+    }
+
+    #[Route('user/{id}/disable',name: 'user_disable')]
+    public function disableUser(EntityManagerInterface $em,User $user):Response
+    {
+        $user->setVerified(0);
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash('success', 'user disabled!');
+
+        return $this->redirectToRoute('gestion_users');
+    }
+    #[Route('user/{id}/active',name: 'user_active')]
+    public function ActivateUser(EntityManagerInterface $em,User $user):Response
+    {
+        $user->setVerified(1);
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash('success', 'user activated!');
+
+        return $this->redirectToRoute('gestion_users');
+    }
+
+    #[Route('user/{id}/delete',name: 'user_delete')]
+    public function deleteUser(EntityManagerInterface $em,User $user):Response
+    {
+
+        $em->remove($user);
+        $em->flush();
+        $this->addFlash('success', 'user deleted successfully !');
+        return $this->redirectToRoute('gestion_users');
 
     }
 
