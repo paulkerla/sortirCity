@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\City;
+use App\Entity\Meetup;
 use App\Entity\Place;
 use App\Entity\Site;
 use App\Entity\User;
@@ -12,6 +13,7 @@ use App\Form\PlaceFormType;
 use App\Form\RegistrationFormType;
 use App\Form\SiteType;
 use App\Repository\CityRepository;
+use App\Repository\MeetupRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\SiteRepository;
 use App\Repository\UserRepository;
@@ -20,7 +22,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/gestion', name: 'gestion_')]
 class GestionController extends AbstractController
 {
@@ -305,6 +309,29 @@ class GestionController extends AbstractController
         $this->addFlash('success', 'user deleted successfully !');
         return $this->redirectToRoute('gestion_users');
 
+    }
+
+//    gestion des meetups
+    #[Route('/meetups', name: 'meetups')]
+    public function meetups(Request $request,MeetupRepository $meetupRepository): Response
+    {
+
+        $search = $request->query->get('search', '');
+        $queryBuilder = $meetupRepository->createQueryBuilder('c');
+
+        if ($search) {
+            $queryBuilder
+                ->where('c.name LIKE :name')
+                ->setParameter('name', strtolower($search) . '%');
+        }
+
+        $queryBuilder->orderBy('c.name', 'ASC');
+        $meetups = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('gestion/meetups.html.twig', [
+            'meetups'=>$meetups,
+            'search' => $search,
+        ]);
     }
 
 }
