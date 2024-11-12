@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <h1>Edit Profile{</h1>
+
+    {{ form_errors(form) }}
+
+    {{ form_start(form) }}
+        {{ form_row(form.firstname) }}
+        {{ form_row(form.surname) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.site) }}
+        {{ form_row(form.phonenumber) }}
+        {{ form_row(form.avatarurl) }}
+    {{ form_end(form) }}
+{% endblock %}
