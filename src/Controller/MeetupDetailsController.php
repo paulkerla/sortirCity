@@ -12,8 +12,6 @@ class MeetupDetailsController extends AbstractController
     #[Route('/meetup/details/{id}', name: 'meetup_details')]
     public function show(Meetup $meetup): Response
     {
-
-
         return $this->render('meetupdetails/meetupdetails.html.twig', [
                 'meetup' => $meetup
             ]);

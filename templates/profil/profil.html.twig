@@ -14,10 +14,16 @@
                         <h5 class="card-title">Personal Information</h5>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
+                                {{ app.user.avatarurl ?? 'Not provided' }}
+                            </li>
+                            <li class="list-group-item">
                                 <strong>First Name:</strong> {{ app.user.firstname ?? 'Not provided' }}
                             </li>
                             <li class="list-group-item">
                                 <strong>Last Name:</strong> {{ app.user.surname ?? 'Not provided' }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Username:</strong> {{ app.user.username ?? 'Not provided' }}
                             </li>
                             <li class="list-group-item">
                                 <strong>Phone Number:</strong> {{ app.user.phonenumber ?? 'Not provided' }}
@@ -29,6 +35,8 @@
                                 <strong>City of Operation:</strong> {{ app.user.site.name ?? 'Not provided' }}
                             </li>
                         </ul>
+                        <a href="{{ path('app_forgot_password_request',{ 'id': user.id }) }}" class="btn btn-primary btn-sm">Change password</a>
+                        <a href="{{ path('app_edit_profile_user',{ 'id': user.id }) }}" class="btn btn-success btn-sm">Edit profile</a>
                     </div>
                 </div>
             </div>
@@ -89,7 +97,7 @@
                             <th scope="col">Meetup Name</th>
                             <th scope="col">Date & Time</th>
                             <th scope="col">Participants</th>
-                            <th scope="col">Organnizer</th>
+                            <th scope="col">Organizer</th>
                         </tr>
                         </thead>
                         <tbody>
