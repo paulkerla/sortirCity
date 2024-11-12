@@ -65,7 +65,7 @@
                                                 <p class="text-dark fw-semibold mb-2">Participants:</p>
                                                 <ul class="list-unstyled text-muted">
                                                     {% for participant in meetup.participants %}
-                                                        <li>{{ participant.username }}</li>
+                                                        <li><a href="{{ path('app_profile_user', {'id':participant.id}) }}">{{ participant.username }}</a></li>
                                                     {% else %}
                                                         <li class="fst-italic">No participants yet.</li>
                                                     {% endfor %}

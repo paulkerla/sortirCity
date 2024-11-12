@@ -4,17 +4,17 @@
 
 {% block body %}
 
-    <h1>{{ app.user.username }} </h1>
+    <h1>{{ user.username }} </h1>
     <div>
-        <h5>Firstname : {{ app.user.firstname }}</h5>
+        <h5>Firstname : {{ user.firstname }}</h5>
         <br>
-        <h5>Surname : {{ app.user.surname }}</h5>
+        <h5>Surname : {{ user.surname }}</h5>
         <br>
-        <h5>Phone number : {{ app.user.phonenumber }}</h5>
+        <h5>Phone number : {{ user.phonenumber }}</h5>
         <br>
-        <h5>Email : {{ app.user.email }}</h5>
+        <h5>Email : {{ user.email }}</h5>
         <br>
-        <h5> City of operation : {{ app.user.site.name }}</h5>
+        <h5> City of operation : {{ user.site.name }}</h5>
         <br>
     </div>
     <a href="{{path('app_index')}}">Retour</a>

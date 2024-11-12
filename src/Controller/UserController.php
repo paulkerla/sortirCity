@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\MeetupRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -27,5 +28,15 @@ class UserController extends AbstractController
         {
             return $this->redirectToRoute('user_login');
         }
+    }
+    #[Route('/profile/{id}', name: 'app_profile_user')]
+    public function usersProfile(User $user):Response
+    {
+
+        return $this->render('profil/profilUsers.html.twig',[
+            'controller_name' => 'UserController',
+            'user' => $user
+        ]);
+
     }
 }
