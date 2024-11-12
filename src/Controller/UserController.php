@@ -16,10 +16,11 @@ class UserController extends AbstractController
         $user = $security->getUser();
         if ($user) {
 
-            $meetups = $meetupRepository->findBy(['organizer' => $user]);
+            $meetups = $meetupRepository->findAll();
             return $this->render('profil/profil.html.twig', [
                 'controller_name' => 'UserController',
                 'meetups' => $meetups,
+                'user' => $user
             ]);
         }
         else
