@@ -24,9 +24,7 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Utilisateur validé avec succès.');
-        return $this->render('main/home.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
+        return $this->redirectToRoute('app_index');
     }
     #[Route('/reject/{id}', name: 'reject')]
     public function rejectUser(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
@@ -42,8 +40,6 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Utilisateur rejeté et supprimé.');
-        return $this->render('main/home.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
+        return $this->redirectToRoute('app_index');
     }
 }

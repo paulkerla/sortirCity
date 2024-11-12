@@ -43,6 +43,8 @@ class RegistrationController extends AbstractController
 
             $mailadmin = 'paul.kerlau2024@campus-eni.fr';
             $this->sendEmailToAdmin($user, $mailadmin, $mailer);
+            $this->addFlash('success', 'Inscription réalisée avec succès. En attente de la validation de l\'admin');
+            return $this->redirectToRoute('user_login');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -53,7 +55,7 @@ class RegistrationController extends AbstractController
     /**
      * @throws TransportExceptionInterface
      */
-    private function sendEmailToAdmin(User $user, string $adminEmail, MailerInterface $mailer)
+    private function sendEmailToAdmin(User $user, string $adminEmail, MailerInterface $mailer): void
     {
 
         $email = (new TemplatedEmail())
@@ -69,9 +71,7 @@ class RegistrationController extends AbstractController
                     'id' => $user->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL) . '">Rejeter l\'utilisateur</a></p>'
             );
-
         $mailer->send($email);
-        $this->addFlash('success', 'Inscription réalisée avec succès. En attente de la validation de l\'admin');
-        return $this->redirectToRoute('user_login');
     }
+
 }
