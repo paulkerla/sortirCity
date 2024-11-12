@@ -47,7 +47,7 @@ class MeetupController extends AbstractController
         $dateMin = $request->query->get('date_min', '');
         $dateMax = $request->query->get('date_max', '');
         $page = max(1, $request->query->getInt('page', 1));
-        $limit = 5;
+        $limit = 20;
 
         $meetupRepo = $entityManager->getRepository(Meetup::class);
         $queryBuilder = $meetupRepo->createQueryBuilder('m')
