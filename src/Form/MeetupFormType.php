@@ -9,6 +9,7 @@ use App\Entity\State;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,7 +22,7 @@ class MeetupFormType extends AbstractType
             ->add('name', null, [
                 'label' => 'Activity title',
                 'attr' => ['class' => 'form-control mb-3']
-                            ])
+            ])
             ->add('startdatetime', null, [
                 'label' => 'Start date & time',
                 'widget' => 'single_text',
@@ -67,8 +68,18 @@ class MeetupFormType extends AbstractType
 //            ->add('state', HiddenType::class, [
 //                'data' => $options['data']->getState() ? $options['data']->getState()->getId() : null,
 //            ])
-            ->add('place', PlaceFormType::class, [
-                'label' => false
+            ->add('place', EntityType::class, [
+                'class' => Place::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => 'Select an existing place',
+                'attr' => ['class' => 'form-select mb-3']
+            ])
+            // Nested form for creating a new place if needed
+            ->add('newPlace', PlaceFormType::class, [
+                'label' => 'Or create a new place',
+                'mapped'=>false,
+                'required' => false,
             ]);
 
 

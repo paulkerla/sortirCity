@@ -81,11 +81,9 @@ class MeetupController extends AbstractController
 
         $entityManager->flush(); // Persist status updates
 
-        // Calculate total meetups for pagination
         $totalMeetups = $meetupRepo->count(['site' => $siteId]);
         $totalPages = ceil($totalMeetups / $limit);
 
-        // Organize meetups by site for structured display
         $meetupsBySite = [];
         foreach ($meetups as $meetup) {
             $siteName = $meetup->getSite()->getName();
@@ -105,31 +103,42 @@ class MeetupController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/form', name: 'form')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $entity = new Meetup();
+        $meetup = new Meetup();
 
         $createdState = $entityManager->getRepository(State::class)->findOneBy(['label' => 'Created']);
         if (!$createdState) {
             throw $this->createNotFoundException('The state "Created" was not found.');
         }
-        $entity->setState($createdState);
+        $meetup->setState($createdState);
 
-        // Définit l'utilisateur connecté comme organisateur
+        // Set the current user as the organizer
         $user = $this->getUser();
         if ($user) {
-            $entity->setOrganizer($user);
+            $meetup->setOrganizer($user);
         }
 
-        $form = $this->createForm(MeetupFormType::class, $entity);
-
+        $form = $this->createForm(MeetupFormType::class, $meetup);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($entity);
+            // Check if an existing place was selected
+            $existingPlace = $form->get('place')->getData();
+
+            if ($existingPlace) {
+                $meetup->setPlace($existingPlace);
+            } else {
+                // If no existing place is selected, use the new place data
+                $newPlace = $form->get('newPlace')->getData();
+                if ($newPlace) {
+                    $entityManager->persist($newPlace);
+                    $meetup->setPlace($newPlace);
+                }
+            }
+
+            $entityManager->persist($meetup);
             $entityManager->flush();
 
             return $this->redirectToRoute('meetup_list');
@@ -142,11 +151,11 @@ class MeetupController extends AbstractController
 
 
 
+
     #[Route('/{id}/unsubscribe', name: 'unsubscribe')]
     public function unsubscribe(Meetup $meetup, EntityManagerInterface $em): Response
     {
 
-        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
 
@@ -166,7 +175,6 @@ class MeetupController extends AbstractController
         // Sauvegarder les changements dans la base de données
         $em->flush();
 
-        // Ajouter un message flash de succès
         $this->addFlash('success', 'Unregistration successful.');
 
         return $this->redirectToRoute('meetup_list');

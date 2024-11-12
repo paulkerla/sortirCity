@@ -1,20 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MeetupFormController!{% endblock %}
+{% block title %}Create Meetup{% endblock %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.startdatetime) }}
-    {{ form_row(form.registrationlimitdate) }}
-    {{ form_row(form.duration) }}
-    {{ form_row(form.maxregistrations) }}
-    {{ form_row(form.meetupinfos) }}
-    {{ form_row(form.participants) }}
-{#    {{ form_row(form.organizer) }}#}
-    {{ form_row(form.site) }}
-    {{ form_row(form.place) }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-    {{ form_end(form) }}
-{%  endblock %}
+    <main class="container mt-5">
+        <h1 class="display-4">Create New Meetup</h1>
 
+        {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.startdatetime) }}
+        {{ form_row(form.registrationlimitdate) }}
+        {{ form_row(form.duration) }}
+        {{ form_row(form.maxregistrations) }}
+        {{ form_row(form.meetupinfos) }}
+        {{ form_row(form.participants) }}
+        {{ form_row(form.site) }}
+
+        <h3 class="mt-4">Location</h3>
+        {{ form_row(form.place) }}
+        <h4 class="mt-3">Or enter a new place</h4>
+        {{ form_widget(form.newPlace) }}
+
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        {{ form_end(form) }}
+    </main>
+{% endblock %}

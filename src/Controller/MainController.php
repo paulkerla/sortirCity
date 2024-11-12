@@ -19,10 +19,10 @@ class MainController extends AbstractController
             ->createQueryBuilder('m')
             ->where('m.registrationlimitdate >= :currentDate')
             ->setParameter('currentDate', $currentDate)
-            ->orderBy('m.startdatetime', 'ASC') //ASC pour ascendant/croissant
+            ->orderBy('m.startdatetime', 'ASC')
             ->setMaxResults(5)
             ->getQuery()
-            ->getResult(); // execute et renvoit sous forme de tableau
+            ->getResult();
 
 
         return $this->render('main/home.html.twig', [
