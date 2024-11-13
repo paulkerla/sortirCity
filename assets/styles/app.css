@@ -7,3 +7,9 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.banner-image {
+    height: 400px;
+    object-fit: cover;
+    object-position:center;
+}
+
