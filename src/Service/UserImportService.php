@@ -31,6 +31,7 @@ class UserImportService
                 $user->setUsername($record['username']);
                 $user->setFirstname($record['firstname']);
                 $user->setSurname($record['surname']);
+                $user->setRoles(["ROLE_USER"]);
                 $user->setPhonenumber($record['phonenumber']);
                 $user->setAvatarurl($record['avatarurl']);
                 $user->setVerified((bool)$record['is_verified']);
