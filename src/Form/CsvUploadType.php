@@ -14,9 +14,10 @@ class CsvUploadType extends AbstractType
     {
         $builder
             ->add('csvFile', FileType::class, [
-                'label' => 'Fichier CSV',
+                'label' => 'CSV file',
                 'mapped' => false,
                 'required' => true,
+                'attr' => ['class' => 'form-control mb-3'],
                 'constraints' => [
                     new File([
                         'mimeTypes' => [
