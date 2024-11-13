@@ -6,6 +6,7 @@ use App\Repository\CityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
@@ -19,6 +20,10 @@ class City
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Regex(
+        pattern: '/^\d{5}$/',
+        message: 'The zip code must be a 5-digit number.'
+    )]
     private ?string $zipcode = null;
 
     /**

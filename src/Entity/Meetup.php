@@ -21,6 +21,7 @@ class Meetup
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'The activity title is required.')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -37,13 +38,14 @@ class Meetup
     public function validateDates(ExecutionContextInterface $context): void
     {
         if ($this->startdatetime && $this->registrationlimitdate) {
-            if ($this->startdatetime < $this->registrationlimitdate) {
-                $context->buildViolation('The start date and time cannot be before the registration limit date.')
-                    ->atPath('startdatetime')
+            if ($this->registrationlimitdate > $this->startdatetime) {
+                $context->buildViolation('The registration deadline must be before the start date & time.')
+                    ->atPath('registrationlimitdate')
                     ->addViolation();
             }
         }
     }
+
 
     #[ORM\Column]
     private ?int $maxregistrations = null;
