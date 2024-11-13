@@ -9,6 +9,7 @@ use App\Entity\Place;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Form\CityType;
+use App\Form\CsvUploadType;
 use App\Form\PlaceFormType;
 use App\Form\RegistrationFormType;
 use App\Form\SiteType;
@@ -17,6 +18,7 @@ use App\Repository\MeetupRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\SiteRepository;
 use App\Repository\UserRepository;
+use App\Service\UserImportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +40,7 @@ class GestionController extends AbstractController
 
 //    Gestion des villes
     #[Route('/cities', name: 'cities')]
-    public function city(Request $request,CityRepository $cityRepository): Response
+    public function city(Request $request, CityRepository $cityRepository): Response
     {
         // Récupère le terme de recherche depuis la requête
         $search = $request->query->get('search', '');
@@ -56,13 +58,13 @@ class GestionController extends AbstractController
         $cities = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/cities.html.twig', [
-            'cities'=>$cities,
+            'cities' => $cities,
             'search' => $search,
         ]);
     }
 
-    #[Route('city/create',name: 'city_create')]
-    public function createCity(Request $request,EntityManagerInterface $em):Response
+    #[Route('city/create', name: 'city_create')]
+    public function createCity(Request $request, EntityManagerInterface $em): Response
     {
         $city = new City();
         $form = $this->createForm(CityType::class, $city);
@@ -75,14 +77,14 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_cities');
         }
         return $this->render('gestion/formCity.html.twig', [
-            'form'=>$form,
+            'form' => $form,
         ]);
 
     }
 
 
-    #[Route('city/{id}/delete',name: 'city_delete')]
-    public function deleteCity(EntityManagerInterface $em,City $city):Response
+    #[Route('city/{id}/delete', name: 'city_delete')]
+    public function deleteCity(EntityManagerInterface $em, City $city): Response
     {
 
         $em->remove($city);
@@ -92,8 +94,8 @@ class GestionController extends AbstractController
 
     }
 
-    #[Route('city/{id}/update',name: 'city_update')]
-    public function updateCity(Request $request,EntityManagerInterface $em,City $city):Response
+    #[Route('city/{id}/update', name: 'city_update')]
+    public function updateCity(Request $request, EntityManagerInterface $em, City $city): Response
     {
         $form = $this->createForm(CityType::class, $city);
         $form->handleRequest($request);
@@ -105,14 +107,14 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_cities');
         }
         return $this->render('gestion/formCity.html.twig', [
-            'form'=>$form,
+            'form' => $form,
         ]);
 
     }
 
     //    Gestion des sites
     #[Route('/sites', name: 'sites')]
-    public function site(Request $request,SiteRepository $siteRepository ): Response
+    public function site(Request $request, SiteRepository $siteRepository): Response
     {
         $search = $request->query->get('search', '');
         $queryBuilder = $siteRepository->createQueryBuilder('c');
@@ -128,14 +130,14 @@ class GestionController extends AbstractController
 
 
         return $this->render('gestion/sites.html.twig', [
-            'sites'=>$sites,
+            'sites' => $sites,
             'search' => $search,
         ]);
     }
 
 
-    #[Route('site/create',name: 'site_create')]
-    public function createSite(Request $request,EntityManagerInterface $em):Response
+    #[Route('site/create', name: 'site_create')]
+    public function createSite(Request $request, EntityManagerInterface $em): Response
     {
         $site = new Site();
 
@@ -149,12 +151,13 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_sites');
         }
         return $this->render('gestion/formSite.html.twig', [
-            'form'=>$form,
+            'form' => $form,
         ]);
 
     }
-    #[Route('site/{id}/delete',name: 'site_delete')]
-    public function deleteSite(EntityManagerInterface $em,Site $site):Response
+
+    #[Route('site/{id}/delete', name: 'site_delete')]
+    public function deleteSite(EntityManagerInterface $em, Site $site): Response
     {
 
         $em->remove($site);
@@ -164,8 +167,8 @@ class GestionController extends AbstractController
 
     }
 
-    #[Route('site/{id}/update',name: 'site_update')]
-    public function updateSite(Request $request,EntityManagerInterface $em,Site $site):Response
+    #[Route('site/{id}/update', name: 'site_update')]
+    public function updateSite(Request $request, EntityManagerInterface $em, Site $site): Response
     {
         $form = $this->createForm(SiteType::class, $site);
         $form->handleRequest($request);
@@ -177,7 +180,7 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_sites');
         }
         return $this->render('gestion/formSite.html.twig', [
-            'form'=>$form,
+            'form' => $form,
         ]);
 
     }
@@ -185,7 +188,7 @@ class GestionController extends AbstractController
     //    Gestion des lieux
 
     #[Route('/places', name: 'places')]
-    public function places(Request $request,PlaceRepository $placeRepository ): Response
+    public function places(Request $request, PlaceRepository $placeRepository): Response
     {
         $search = $request->query->get('search', '');
         $queryBuilder = $placeRepository->createQueryBuilder('c');
@@ -200,13 +203,13 @@ class GestionController extends AbstractController
         $places = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/places.html.twig', [
-            'places'=>$places,
+            'places' => $places,
             'search' => $search,
         ]);
     }
 
-    #[Route('place/create',name: 'place_create')]
-    public function createPlace(Request $request,EntityManagerInterface $em):Response
+    #[Route('place/create', name: 'place_create')]
+    public function createPlace(Request $request, EntityManagerInterface $em): Response
     {
         $place = new Place();
 
@@ -220,12 +223,13 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_places');
         }
         return $this->render('gestion/formPlace.html.twig', [
-            'form'=>$form,
+            'form' => $form,
         ]);
 
     }
-    #[Route('place/{id}/delete',name: 'place_delete')]
-    public function deletePlace(EntityManagerInterface $em,Place $place):Response
+
+    #[Route('place/{id}/delete', name: 'place_delete')]
+    public function deletePlace(EntityManagerInterface $em, Place $place): Response
     {
 
         $em->remove($place);
@@ -234,9 +238,10 @@ class GestionController extends AbstractController
         return $this->redirectToRoute('gestion_places');
 
     }
+
     //gestion des utilisateurs
     #[Route('/users', name: 'users')]
-    public function user(Request $request,UserRepository $userRepository): Response
+    public function user(Request $request, UserRepository $userRepository): Response
     {
         // Récupère le terme de recherche depuis la requête
         $search = $request->query->get('search', '');
@@ -254,13 +259,13 @@ class GestionController extends AbstractController
         $users = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/users.html.twig', [
-            'users'=>$users,
+            'users' => $users,
             'search' => $search,
         ]);
     }
 
-    #[Route('user/create',name: 'user_create')]
-    public function createUser(Request $request,EntityManagerInterface $em):Response
+    #[Route('user/create', name: 'user_create')]
+    public function createUser(Request $request, EntityManagerInterface $em): Response
     {
         $user = new User();
 
@@ -274,7 +279,7 @@ class GestionController extends AbstractController
             return $this->redirectToRoute('gestion_users');
         }
         return $this->render('registration/register.html.twig', [
-            'registrationForm'=>$form,
+            'registrationForm' => $form,
         ]);
 
     }
@@ -289,11 +294,10 @@ class GestionController extends AbstractController
             $csvFile = $form->get('csvFile')->getData();
 
             if ($csvFile) {
-                // Traitement de l'import avec le service dédié
                 $result = $userImportService->importFromCsv($csvFile->getPathname());
 
                 if ($result['success']) {
-                    $this->addFlash('success', 'Importation réussie.');
+                    $this->addFlash('success', 'Import successful.');
                 } else {
                     $this->addFlash('error', $result['message']);
                 }
@@ -301,14 +305,13 @@ class GestionController extends AbstractController
                 return $this->redirectToRoute('gestion_users');
             }
         }
-
-        return $this->render('admin/import_users.html.twig', [
+        return $this->render('gestion/formCSV.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('user/{id}/disable',name: 'user_disable')]
-    public function disableUser(EntityManagerInterface $em,User $user):Response
+    #[Route('user/{id}/disable', name: 'user_disable')]
+    public function disableUser(EntityManagerInterface $em, User $user): Response
     {
         $user->setVerified(0);
         $em->persist($user);
@@ -317,8 +320,9 @@ class GestionController extends AbstractController
 
         return $this->redirectToRoute('gestion_users');
     }
-    #[Route('user/{id}/active',name: 'user_active')]
-    public function ActivateUser(EntityManagerInterface $em,User $user):Response
+
+    #[Route('user/{id}/active', name: 'user_active')]
+    public function ActivateUser(EntityManagerInterface $em, User $user): Response
     {
         $user->setVerified(1);
         $em->persist($user);
@@ -328,8 +332,8 @@ class GestionController extends AbstractController
         return $this->redirectToRoute('gestion_users');
     }
 
-    #[Route('user/{id}/delete',name: 'user_delete')]
-    public function deleteUser(EntityManagerInterface $em,User $user):Response
+    #[Route('user/{id}/delete', name: 'user_delete')]
+    public function deleteUser(EntityManagerInterface $em, User $user): Response
     {
 
         $em->remove($user);
@@ -341,7 +345,7 @@ class GestionController extends AbstractController
 
 //    gestion des meetups
     #[Route('/meetups', name: 'meetups')]
-    public function meetups(Request $request,MeetupRepository $meetupRepository): Response
+    public function meetups(Request $request, MeetupRepository $meetupRepository): Response
     {
 
         $search = $request->query->get('search', '');
@@ -357,7 +361,7 @@ class GestionController extends AbstractController
         $meetups = $queryBuilder->getQuery()->getResult();
 
         return $this->render('gestion/meetups.html.twig', [
-            'meetups'=>$meetups,
+            'meetups' => $meetups,
             'search' => $search,
         ]);
     }
