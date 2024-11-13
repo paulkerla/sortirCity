@@ -279,6 +279,34 @@ class GestionController extends AbstractController
 
     }
 
+    #[Route('/user/import-users', name: 'import_users')]
+    public function importUsers(Request $request, UserImportService $userImportService): Response
+    {
+        $form = $this->createForm(CsvUploadType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $csvFile = $form->get('csvFile')->getData();
+
+            if ($csvFile) {
+                // Traitement de l'import avec le service dédié
+                $result = $userImportService->importFromCsv($csvFile->getPathname());
+
+                if ($result['success']) {
+                    $this->addFlash('success', 'Importation réussie.');
+                } else {
+                    $this->addFlash('error', $result['message']);
+                }
+
+                return $this->redirectToRoute('gestion_users');
+            }
+        }
+
+        return $this->render('admin/import_users.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('user/{id}/disable',name: 'user_disable')]
     public function disableUser(EntityManagerInterface $em,User $user):Response
     {
