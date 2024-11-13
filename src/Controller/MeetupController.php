@@ -234,3 +234,4 @@ class MeetupController extends AbstractController
     }
 
 }
+
