@@ -100,8 +100,7 @@ class MeetupController extends AbstractController
             'search' => $search,
             'dateMin' => $dateMin,
             'dateMax' => $dateMax,
-        ]);
-    }
+        ]);}
 
     #[Route('/form', name: 'form')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -124,18 +123,26 @@ class MeetupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Check if an existing place was selected
             $existingPlace = $form->get('place')->getData();
+            $newPlace = $form->get('newPlace')->getData();
 
             if ($existingPlace) {
                 $meetup->setPlace($existingPlace);
-            } else {
-                // If no existing place is selected, use the new place data
-                $newPlace = $form->get('newPlace')->getData();
-                if ($newPlace) {
-                    $entityManager->persist($newPlace);
-                    $meetup->setPlace($newPlace);
+            } elseif ($newPlace) {
+                $existingCity = $newPlace->getCity();
+                $newCityData = $form->get('newPlace')->get('newCity')->getData();
+
+                if ($existingCity) {
+                    $newPlace->setCity($existingCity);
+                } elseif ($newCityData) {
+                    // Si une nouvelle ville est créée, on la persiste
+                    $entityManager->persist($newCityData);
+                    $newPlace->setCity($newCityData);
                 }
+
+                // Persister le nouveau lieu avec la ville définie
+                $entityManager->persist($newPlace);
+                $meetup->setPlace($newPlace);
             }
 
             $entityManager->persist($meetup);
@@ -151,109 +158,109 @@ class MeetupController extends AbstractController
 
 
 
-
-    #[Route('/{id}/unsubscribe', name: 'unsubscribe')]
+#[
+Route('/{id}/unsubscribe', name: 'unsubscribe')]
     public function unsubscribe(Meetup $meetup, EntityManagerInterface $em): Response
-    {
+{
 
-        $user = $this->getUser();
+    $user = $this->getUser();
 
 
-        if (!$user) {
-            return $this->redirectToRoute('login');
-        }
-
-        // Vérifier si l'utilisateur est déjà inscrit à cet événement
-        if (!$meetup->getParticipants()->contains($user)) {
-            $this->addFlash('error', 'You are not registered for this event.');
-            return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
-        }
-
-        // Désinscrire l'utilisateur de l'événement
-        $meetup->removeParticipant($user);
-
-        // Sauvegarder les changements dans la base de données
-        $em->flush();
-
-        $this->addFlash('success', 'Unregistration successful.');
-
-        return $this->redirectToRoute('meetup_list');
+    if (!$user) {
+        return $this->redirectToRoute('login');
     }
+
+    // Vérifier si l'utilisateur est déjà inscrit à cet événement
+    if (!$meetup->getParticipants()->contains($user)) {
+        $this->addFlash('error', 'You are not registered for this event.');
+        return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
+    }
+
+    // Désinscrire l'utilisateur de l'événement
+    $meetup->removeParticipant($user);
+
+    // Sauvegarder les changements dans la base de données
+    $em->flush();
+
+    $this->addFlash('success', 'Unregistration successful.');
+
+    return $this->redirectToRoute('meetup_list');
+}
 
     #[Route('/{id}/subscribe', name: 'subscribe')]
     public function subscribe(Meetup $meetup, EntityManagerInterface $em): Response
-    {
+{
 
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
+    // Récupérer l'utilisateur connecté
+    $user = $this->getUser();
 
-        if (!$user) {
-            return $this->redirectToRoute('login');
-        }
+    if (!$user) {
+        return $this->redirectToRoute('login');
+    }
 
-        // Vérifier si l'utilisateur est déjà inscrit à cet événement
-        if ($meetup->getParticipants()->contains($user)) {
-            $this->addFlash('error', 'You are already registered for this event.');
-            return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
-        }
+    // Vérifier si l'utilisateur est déjà inscrit à cet événement
+    if ($meetup->getParticipants()->contains($user)) {
+        $this->addFlash('error', 'You are already registered for this event.');
+        return $this->redirectToRoute('meetup_list', ['id' => $meetup->getId()]);
+    }
 
-        // Désinscrire l'utilisateur de l'événement
-        $meetup->addParticipant($user);
+    // Désinscrire l'utilisateur de l'événement
+    $meetup->addParticipant($user);
 
-        // Sauvegarder les changements dans la base de données
-        $em->flush();
+    // Sauvegarder les changements dans la base de données
+    $em->flush();
 
-        // Ajouter un message flash de succès
-        $this->addFlash('success', 'Registration successful.');
+    // Ajouter un message flash de succès
+    $this->addFlash('success', 'Registration successful.');
+
+    return $this->redirectToRoute('meetup_list');
+}
+
+    #[Route('/{id}/edit', name: 'edit')]
+    public function edit(Meetup $meetup, Request $request, EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+
+    if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
+        throw $this->createAccessDeniedException('You\'re not allowed to edit this meetup !');
+    }
+
+    $form = $this->createForm(MeetupFormType::class, $meetup);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Meetup edited !');
 
         return $this->redirectToRoute('meetup_list');
     }
 
-    #[Route('/{id}/edit', name: 'edit')]
-    public function edit(Meetup $meetup, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-
-        if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('You\'re not allowed to edit this meetup !');
-        }
-
-        $form = $this->createForm(MeetupFormType::class, $meetup);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Meetup edited !');
-
-            return $this->redirectToRoute('meetup_list');
-        }
-
-        return $this->render('meetups/editmeetup.html.twig', [
-            'form' => $form->createView(),
-            'meetup' => $meetup,
-        ]);
-    }
+    return $this->render('meetups/editmeetup.html.twig', [
+        'form' => $form->createView(),
+        'meetup' => $meetup,
+    ]);
+}
 
 
     #[Route('/{id}/update-state', name: 'update_state', methods: ['POST'])]
     public function updateState(Request $request, Meetup $meetup, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
+{
+    $user = $this->getUser();
 
-        if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('You do not have permission to edit this meetup state.');
-        }
-
-        $newStateId = $request->request->get('state');
-        $newState = $entityManager->getRepository(State::class)->find($newStateId);
-
-        if ($newState) {
-            $meetup->setState($newState);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('meetup_list');
+    if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
+        throw $this->createAccessDeniedException('You do not have permission to edit this meetup state.');
     }
+
+    $newStateId = $request->request->get('state');
+    $newState = $entityManager->getRepository(State::class)->find($newStateId);
+
+    if ($newState) {
+        $meetup->setState($newState);
+        $entityManager->flush();
+    }
+
+    return $this->redirectToRoute('meetup_list');
+}
 
 }
