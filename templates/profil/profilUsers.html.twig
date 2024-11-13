@@ -3,19 +3,44 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-
-    <h1>{{ user.username }} </h1>
-    <div>
-        <h5>Firstname : {{ user.firstname }}</h5>
-        <br>
-        <h5>Surname : {{ user.surname }}</h5>
-        <br>
-        <h5>Phone number : {{ user.phonenumber }}</h5>
-        <br>
-        <h5>Email : {{ user.email }}</h5>
-        <br>
-        <h5> City of operation : {{ user.site.name }}</h5>
-        <br>
+    <div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h1>{{ user.username }}</h1>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Personal Information</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            {{ app.user.avatarurl ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>First Name:</strong> {{ user.firstname ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Last Name:</strong> {{ user.surname ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Username:</strong> {{ user.username ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Phone Number:</strong> {{ user.phonenumber ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email:</strong> {{ user.email ?? 'Not provided' }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>City of Operation:</strong> {{ user.site.name ?? 'Not provided' }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <a href="{{path('app_index')}}">Retour</a>
+    <br>
+    <div class="text-center mt-3">
+        <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+    </div>
 {% endblock %}
