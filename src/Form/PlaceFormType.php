@@ -21,8 +21,14 @@ class PlaceFormType extends AbstractType
             ->add('city', EntityType::class, [
                 'class' => City::class,
                 'choice_label' => 'name',
-                'label' => 'City',
-                'attr' => ['class' => 'form-control mb-3']
+                'placeholder' => 'Select an existing city',
+                'required' => false,
+                'attr' => ['class' => 'form-select mb-3'],
+            ])
+            ->add('newCity', CityType::class, [
+                'label' => 'Or create a new city',
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('streetname', null, [
                 'label' => 'Street Name',
