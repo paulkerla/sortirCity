@@ -18,7 +18,6 @@ class UserImportService
 
     public function importFromCsv(string $csvFilePath): array
     {
-        // Chargement et lecture du fichier CSV
         $csv = Reader::createFromPath($csvFilePath, 'r');
         $csv->setHeaderOffset(0); // S'assurer que la première ligne est l'entête
         $records = $csv->getRecords();
@@ -36,7 +35,6 @@ class UserImportService
                 $user->setAvatarurl($record['avatarurl']);
                 $user->setVerified((bool)$record['is_verified']);
 
-                // Récupérer l'entité Site à partir de l'ID
                 $siteId = $record['site_id'];
                 $site = $this->entityManager->getRepository(Site::class)->find($siteId);
 
@@ -46,15 +44,12 @@ class UserImportService
                     throw new \Exception("Site with ID $siteId not found.");
                 }
 
-                // Hashage du mot de passe
                 $hashedPassword = password_hash($record['password'], PASSWORD_BCRYPT);
                 $user->setPassword($hashedPassword);
 
-                // Persister l'utilisateur
                 $this->entityManager->persist($user);
             }
 
-            // Sauvegarder tous les utilisateurs en base de données
             $this->entityManager->flush();
 
             $results['success'] = true;
@@ -64,7 +59,7 @@ class UserImportService
             $results['message'] = 'Error: ' . $e->getMessage();
         }
 
-        return $results;  // Retourner les résultats de l'importation
+        return $results;
     }
 }
 

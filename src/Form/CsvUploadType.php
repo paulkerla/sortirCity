@@ -26,7 +26,7 @@ class CsvUploadType extends AbstractType
                             'application/vnd.ms-excel',
                             'application/csv',
                         ],
-                        'mimeTypesMessage' => 'Veuillez uploader un fichier CSV valide.',
+                        'mimeTypesMessage' => 'Please upload a valid CSV file.',
                     ])
                 ],
             ]);

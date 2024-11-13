@@ -294,11 +294,10 @@ class GestionController extends AbstractController
             $csvFile = $form->get('csvFile')->getData();
 
             if ($csvFile) {
-                // Traitement de l'import avec le service dédié
                 $result = $userImportService->importFromCsv($csvFile->getPathname());
 
                 if ($result['success']) {
-                    $this->addFlash('success', 'Importation réussie.');
+                    $this->addFlash('success', 'Import successful.');
                 } else {
                     $this->addFlash('error', $result['message']);
                 }
