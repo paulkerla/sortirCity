@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Service\MeetupValidator;
 use App\Repository\MeetupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Validator as CustomAssert;
 
 #[ORM\Entity(repositoryClass: MeetupRepository::class)]
 class Meetup
@@ -32,20 +34,6 @@ class Meetup
 
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
-
-
-    #[Assert\Callback]
-    public function validateDates(ExecutionContextInterface $context): void
-    {
-        if ($this->startdatetime && $this->registrationlimitdate) {
-            if ($this->registrationlimitdate > $this->startdatetime) {
-                $context->buildViolation('The registration deadline must be before the start date & time.')
-                    ->atPath('registrationlimitdate')
-                    ->addViolation();
-            }
-        }
-    }
-
 
     #[ORM\Column]
     private ?int $maxregistrations = null;
@@ -82,7 +70,7 @@ class Meetup
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-      }
+    }
 
     public function getId(): ?int
     {
@@ -267,7 +255,7 @@ class Meetup
         $statePassed = $entityManager->getRepository(State::class)->find(5);
 
         $interval = new \DateInterval('PT' . $this->duration . 'M');
-        $meetupEnd = (clone $this->startdatetime )->add($interval);
+        $meetupEnd = (clone $this->startdatetime)->add($interval);
 
         $archiveDate = (clone $this->startdatetime)->modify('+1 month');
 
