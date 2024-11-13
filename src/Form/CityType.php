@@ -12,9 +12,14 @@ class CityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('zipcode')
-        ;
+            ->add('name', null, [
+                'label' => 'City',
+                'attr' => ['class' => 'form-control mb-3']
+            ])
+            ->add('zipcode', null, [
+                'label' => 'Zipcode',
+                'attr' => ['class' => 'form-control mb-3']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

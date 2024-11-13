@@ -12,7 +12,10 @@ class SiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'label' => 'City',
+                'attr' => ['class' => 'form-control mb-3']
+            ])
         ;
     }
 
