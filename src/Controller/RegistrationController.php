@@ -17,6 +17,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -24,7 +25,7 @@ class RegistrationController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function register(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $user = new User();
         $user->setVerified(false);
@@ -38,6 +39,16 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             $user->setRoles(["ROLE_USER"]);
+            $profileImage = $form->get('avatarurl')->getData();
+            if ($profileImage)
+            {
+                $originalFile = pathinfo($profileImage->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFile = $slugger->slug($originalFile);
+                $newFile = $safeFile.'-'.uniqid().'.'.$profileImage->guessExtension();
+                $profileImage->move(
+                    $this->getParameter('profile_images_directory'), $newFile);
+                    $user->setAvatarurl($newFile);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
