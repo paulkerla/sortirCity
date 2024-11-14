@@ -209,20 +209,62 @@ class MeetupController extends AbstractController
         return $this->redirectToRoute('meetup_list');
     }
 
-    #[Route('/{id}/edit', name: 'edit')] public function edit(Meetup $meetup, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit', name: 'edit')]
+    public function edit(Meetup $meetup, Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier que l'utilisateur connecté est l'organisateur ou a le rôle admin
         $user = $this->getUser();
         if ($user !== $meetup->getOrganizer() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('You\'re not allowed to edit this meetup !');
+            throw $this->createAccessDeniedException('You are not allowed to edit this meetup!');
         }
+
         $form = $this->createForm(MeetupFormType::class, $meetup);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Validation de la date limite d'inscription
+            if ($meetup->getRegistrationlimitdate() > $meetup->getStartdatetime()) {
+                $this->addFlash('error', 'The registration deadline must be before the start date & time.');
+                return $this->render('meetups/editmeetup.html.twig', ['form' => $form->createView(), 'meetup' => $meetup]);
+            }
+
+            // Validation du nombre maximal de participants
+            if ($meetup->getMaxregistrations() !== null && $meetup->getParticipants()->count() > $meetup->getMaxregistrations()) {
+                $this->addFlash('error', 'The number of participants cannot exceed the maximum allowed.');
+                return $this->render('meetups/editmeetup.html.twig', ['form' => $form->createView(), 'meetup' => $meetup]);
+            }
+
+            // Gestion des lieux
+            $existingPlace = $form->get('place')->getData();
+            $newPlace = $form->get('newPlace')->getData();
+
+            if ($existingPlace) {
+                $meetup->setPlace($existingPlace);
+            } elseif ($newPlace) {
+                $existingCity = $newPlace->getCity();
+                $newCityData = $form->get('newPlace')->get('newCity')->getData();
+
+                if ($existingCity) {
+                    $newPlace->setCity($existingCity);
+                } elseif ($newCityData) {
+                    $entityManager->persist($newCityData);
+                    $newPlace->setCity($newCityData);
+                }
+
+                $entityManager->persist($newPlace);
+                $meetup->setPlace($newPlace);
+            }
+
             $entityManager->flush();
-            $this->addFlash('success', 'Meetup edited !');
+
+            $this->addFlash('success', 'Meetup updated successfully!');
             return $this->redirectToRoute('meetup_list');
         }
-        return $this->render('meetups/editmeetup.html.twig', ['form' => $form->createView(), 'meetup' => $meetup,]);
+
+        return $this->render('meetups/editmeetup.html.twig', [
+            'form' => $form->createView(),
+            'meetup' => $meetup,
+        ]);
     }
 
 
