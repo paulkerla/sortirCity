@@ -6,7 +6,7 @@
 {% block body %}
     <main class="container mt-5">
         <nav class="nav mb-4">
-            <a href="{{ path('meetup_list') }}" class="nav-link {% if currentSite is empty %}active{% endif %}">Tous les sites</a>
+            <a href="{{ path('meetup_list') }}" class="nav-link {% if currentSite is empty %}active{% endif %}">All sites</a>
             {% for site in sites %}
                 <a href="{{ path('meetup_list', { 'site': site.id }) }}" class="nav-link {% if currentSite is not empty and currentSite.id == site.id %}active{% endif %}">{{ site.name }}</a>
             {% endfor %}

@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 #[Route('/meetup', name: 'meetup_')]
@@ -106,21 +107,23 @@ class MeetupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Validation de la date limite d'inscription
             if ($meetup->getRegistrationlimitdate() > $meetup->getStartdatetime()) {
                 $this->addFlash('error', 'The registration deadline must be before the start date & time.');
-                return $this->render('meetups/meetupform.html.twig', ['form' => $form->createView()]);
+                return $this->redirect($this->generateUrl('meetup_form', [], UrlGeneratorInterface::ABSOLUTE_URL));
             }
 
-            // Validation du nombre maximal de participants
             if ($meetup->getMaxregistrations() !== null && $meetup->getParticipants()->count() > $meetup->getMaxregistrations()) {
                 $this->addFlash('error', 'The number of participants cannot exceed the maximum allowed.');
-                return $this->render('meetups/meetupform.html.twig', ['form' => $form->createView()]);
+                return $this->redirect($this->generateUrl('meetup_form', [], UrlGeneratorInterface::ABSOLUTE_URL));
             }
 
-            // Gestion des lieux
             $existingPlace = $form->get('place')->getData();
             $newPlace = $form->get('newPlace')->getData();
+
+            if (!$existingPlace && !$newPlace) {
+                $this->addFlash('error', 'Please select an existing place or create a new one.');
+                return $this->redirect($this->generateUrl('meetup_form', [], UrlGeneratorInterface::ABSOLUTE_URL));
+            }
 
             if ($existingPlace) {
                 $meetup->setPlace($existingPlace);
@@ -286,6 +289,12 @@ class MeetupController extends AbstractController
         }
 
         return $this->redirectToRoute('meetup_list');
+    }
+
+    #[Route('/error', name: 'error_page')]
+    public function error(): Response
+    {
+        return $this->render('error/error.html.twig');
     }
 
 }

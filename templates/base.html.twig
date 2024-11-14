@@ -22,26 +22,26 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a href="{{ path('app_index') }}" class="nav-link">Home</a>
+                    <a href="{{ path('app_index') }}" class="nav-link text-white">Home</a>
                 </li>
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item">
-                        <a href="{{ path('app_profile') }}" class="nav-link">Profile</a>
+                        <a href="{{ path('app_profile') }}" class="nav-link text-white">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path('meetup_list') }}" class="nav-link">Meetups</a>
+                        <a href="{{ path('meetup_list') }}" class="nav-link text-white">Meetups</a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
-                            <a href="{{ path('gestion_index') }}" class="nav-link">Management</a>
+                            <a href="{{ path('gestion_index') }}" class="nav-link text-white">Management</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a href="{{ path('user_logout') }}" class="nav-link">Logout</a>
+                        <a href="{{ path('user_logout') }}" class="nav-link text-white">Logout</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a href="{{ path('user_login') }}" class="nav-link">Login</a>
+                        <a href="{{ path('user_login') }}" class="nav-link text-white">Login</a>
                     </li>
                 {% endif %}
             </ul>

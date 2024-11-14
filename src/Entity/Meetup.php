@@ -219,47 +219,12 @@ class Meetup
         return $this;
     }
 
-//
-//    // Méthode qui met à jour le statut du meetup si la date limite d'inscription est dépassée
-//    public function updateStatusIfDeadlinePassed(EntityManagerInterface $entityManager): void
-//    {
-//        // Utiliser l'EntityManager pour récupérer le repository de l'entité State
-//        $closedState = $entityManager->getRepository(State::class)->find(3); // Trouver l'état avec ID 3 (Closed)
-//
-//        // Vérifiez si la date d'inscription est dépassée et mettez à jour le statut
-//        if ($this->registrationlimitdate < new \DateTime() && $closedState !== null) {
-//            $this->setState($closedState); // Mettre à jour le statut du meetup avec l'état "closed"
-//        }
-//    }
-//
-//    // Méthode qui met à jour le statut du meetup si la date est dépassée d'un mois
-//    public function updateStatusIfMeetupArchive(EntityManagerInterface $entityManager): void
-//    {
-//
-//        $stateArchive = $entityManager->getRepository(State::class)->find(7);
-//
-//        $oneMonthLater = new \DateTime();
-//        $oneMonthLater->modify('+1 month');
-//
-//        // Vérifier si la date d'inscription est dépassée et si la date d'inscription est supérieure à aujourd'hui + 1 mois
-//        if ($this->startdatetime < new \DateTime() && $this->startdatetime <= $oneMonthLater && $stateArchive !== null) {
-//            $this->setState($stateArchive); // Mettre à jour le statut du meetup avec l'état "closed" (ou archive)
-//        }
-//    }
-//
-//    public function updateStatusIfMeetupPassed(EntityManagerInterface $entityManager): void
-//    {
-//
-//
-//        $statePassed = $entityManager->getRepository(State::class)->find(5);
-//
-//        $interval = new \DateInterval('PT' . $this->duration . 'M');
-//        $meetupEnd = (clone $this->startdatetime)->add($interval);
-//
-//        $archiveDate = (clone $this->startdatetime)->modify('+1 month');
-//
-//        if (new \DateTime() > $meetupEnd && new \DateTime() <= $archiveDate && $statePassed !== null) {
-//            $this->setState($statePassed);
-//        }
-//    }
+    public function validatePlaceOrNewPlace(ExecutionContextInterface $context): void
+    {
+        if (!$this->place && !$this->newPlace) {
+            $context->buildViolation('Please select an existing place or create a new one.')
+                ->atPath('place')
+                ->addViolation();
+        }
+    }
 }
