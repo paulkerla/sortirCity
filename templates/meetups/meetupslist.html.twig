@@ -68,11 +68,11 @@
                                         <div class="mt-auto d-flex justify-content-center">
                                             {% if meetup.participants.contains(app.user) %}
                                                 <a href="{{ path('meetup_unsubscribe', {'id': meetup.id}) }}" class="btn btn-cancel text-center w-75" style="font-size: 1rem;">
-                                                    Unsubscribe
+                                                    Leave Meetup
                                                 </a>
                                             {% elseif meetup.state.label != 'Closed' and (meetup.maxregistrations is null or meetup.participants|length < meetup.maxregistrations) %}
                                                 <a href="{{ path('meetup_subscribe', {'id': meetup.id }) }}" class="btn btn-secondary-custom text-white text-center w-75" style="font-size: 1rem;">
-                                                    Subscribe
+                                                    Join Meetup
                                                 </a>
                                             {% endif %}
                                         </div>
