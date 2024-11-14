@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Service\MeetupValidator;
+
 use App\Repository\MeetupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use App\Validator as CustomAssert;
 
 #[ORM\Entity(repositoryClass: MeetupRepository::class)]
 class Meetup

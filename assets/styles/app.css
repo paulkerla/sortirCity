@@ -12,4 +12,40 @@
     object-fit: cover;
     object-position:center;
 }
+.bg-custom {
+    background-color: #a9193b !important;
+}
+.btn-custom {
+    background-color: #a9193b;
+    border-color: #a9193b;
+}
 
+.btn-custom:hover {
+    background-color: #a9193b;
+    border-color: #a9193b;
+}
+.btn-secondary-custom {
+    background-color: #00798a;
+    border-color: #00798a;
+    color: white;
+}
+
+.btn-secondary-custom:hover {
+    background-color: #006670;
+    border-color: #006670;
+    color: white;
+}
+.btn-cancel {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    color: white;
+}
+.text-site-color {
+    color: #00798a;
+}
