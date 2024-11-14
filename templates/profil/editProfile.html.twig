@@ -3,16 +3,25 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block body %}
-    <h1>Edit Profile</h1>
+    <main class="container mt-5">
+        <h1 class="display-4 text-center mb-4 text-site-color">Edit Profile</h1>
 
-    {{ form_errors(form) }}
+        {{ form_start(form) }}
 
-    {{ form_start(form) }}
-        {{ form_row(form.firstname) }}
-        {{ form_row(form.surname) }}
-        {{ form_row(form.username) }}
-        {{ form_row(form.site) }}
-        {{ form_row(form.phonenumber) }}
-        {{ form_row(form.avatarurl) }}
-    {{ form_end(form) }}
+        {{ form_row(form.firstname, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.surname, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.username, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.site, {'attr': {'class': 'form-select mb-3'}}) }}
+        {{ form_row(form.phonenumber, {'attr': {'class': 'form-control mb-3'}}) }}
+        {{ form_row(form.avatarurl, {'attr': {'class': 'form-control mb-3'}}) }}
+
+
+        {# Style personnalisé pour le bouton de soumission #}
+        <div class="d-grid mt-3">
+            {{ form_widget(form._token) }} {# Requis pour la protection CSRF #}
+            <button type="submit" class="btn btn-secondary-custom w-100">Edit Profile</button>
+        </div>
+
+        {{ form_end(form, {'render_rest': false}) }}
+    </main>
 {% endblock %}
