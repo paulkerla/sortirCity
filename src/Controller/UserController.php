@@ -8,10 +8,10 @@ use App\Repository\MeetupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserController extends AbstractController
 {
@@ -45,12 +45,23 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile/edit/{id}', name: 'app_edit_profile_user')]
-    public function userEditProfile(User $user, Request $request, EntityManagerInterface $entityManager):Response
+    public function userEditProfile(User $user, Request $request, EntityManagerInterface $entityManager,SluggerInterface $slugger):Response
     {
         $ProfileditForm = $this->createForm(ProfileditFormType::class,$user);
         $ProfileditForm->handleRequest($request);
 
         if ($ProfileditForm->isSubmitted() && $ProfileditForm->isValid()) {
+
+            $profileImage = $ProfileditForm->get('avatarurl')->getData();
+            if ($profileImage)
+            {
+                $originalFile = pathinfo($profileImage->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFile = $slugger->slug($originalFile);
+                $newFile = $safeFile.'-'.uniqid().'.'.$profileImage->guessExtension();
+                $profileImage->move(
+                    $this->getParameter('profile_images_directory'), $newFile);
+                $user->setAvatarurl($newFile);
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Profile edited !');

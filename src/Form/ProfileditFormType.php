@@ -47,7 +47,8 @@ class ProfileditFormType extends AbstractType
             ->add('avatarurl', FileType::class, [
                 'label' => 'Photo de profil (jpg, png)',
                 'required' => false,
-                'attr' => ['class' => 'form-select mb-3']
+                'attr' => ['class' => 'form-select mb-3'],
+                'data_class' => null,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Sign up',
