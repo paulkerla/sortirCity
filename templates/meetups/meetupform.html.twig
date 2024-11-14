@@ -4,7 +4,7 @@
 
 {% block body %}
     <main class="container mt-5">
-        <h1 class="display-4">Create New Meetup</h1>
+        <h1 class="display-4 text-center mb-4 text-site-color">Create New Meetup</h1>
 
         {{ form_start(form) }}
 
@@ -17,21 +17,28 @@
         {{ form_row(form.participants) }}
         {{ form_row(form.site) }}
 
-        <h4 class="mt-4">Chose an existing place</h4>
+        <h4 class="mt-4 text-site-color">Choose an Existing Location</h4>
         {{ form_row(form.place) }}
 
-        <h4 class="mt-3">Or create a new place</h4>
+        <h4 class="mt-3 text-site-color">Or Create a New Location</h4>
         {{ form_row(form.newPlace.name) }}
 
-        <h5 class="mt-3">Chose a city</h5>
+        <h5 class="mt-3 text-site-color">Additional Location Details</h5>
+        {{ form_row(form.newPlace.streetname) }}
+        {{ form_row(form.newPlace.latitude) }}
+        {{ form_row(form.newPlace.longitude) }}
+
+        <h6 class="mt-3 text-site-color">Choose a City</h6>
         {{ form_row(form.newPlace.city) }}
 
-        <h5 class="mt-3">Or create a new city</h5>
+        <h6 class="mt-3 text-site-color">Or Create a New City</h6>
         {{ form_row(form.newPlace.newCity.name) }}
         {{ form_row(form.newPlace.newCity.zipcode) }}
 
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        <button type="submit" class="btn btn-secondary-custom mt-3 w-100">Submit</button>
 
         {{ form_end(form) }}
+
     </main>
 {% endblock %}
+
