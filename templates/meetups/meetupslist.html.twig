@@ -6,11 +6,12 @@
 {% block body %}
     <main class="container mt-5">
         <nav class="nav mb-4">
-            <a href="{{ path('meetup_list') }}" class="nav-link {% if currentSite is empty %}active{% endif %}">All sites</a>
+            <a href="{{ path('meetup_list') }}" class="nav-link nav-link-custom {% if currentSite is empty %}active{% endif %}">All sites</a>
             {% for site in sites %}
-                <a href="{{ path('meetup_list', { 'site': site.id }) }}" class="nav-link {% if currentSite is not empty and currentSite.id == site.id %}active{% endif %}">{{ site.name }}</a>
+                <a href="{{ path('meetup_list', { 'site': site.id }) }}" class="nav-link nav-link-custom {% if currentSite is not empty and currentSite.id == site.id %}active{% endif %}">{{ site.name }}</a>
             {% endfor %}
         </nav>
+
 
         <section class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="display-4 text-site-color ">Meetups</h1>

@@ -49,3 +49,10 @@
 .text-site-color {
     color: #00798a;
 }
+.nav-link-custom {
+    color: #00798a;
+}
+
+.nav-link-custom.active {
+    color: #a9193b;
+}
