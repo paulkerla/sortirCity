@@ -10,10 +10,10 @@
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Find a user by email"
                        value="{{ search }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-secondary-custom">Search</button>
             </div>
         </form>
-        <h1 class="mb-4">Users</h1>
+        <h1 class="mb-4 text-site-color">Users</h1>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -54,8 +54,8 @@
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('gestion_user_create') }}" class="btn btn-success btn-sm">Add user</a>
-        <a href="{{ path('gestion_import_users') }}" class="btn btn-warning btn-sm">Add users with CSV file</a>
+        <a href="{{ path('gestion_user_create') }}" class="btn btn-secondary-custom btn-sm">Add user</a>
+        <a href="{{ path('gestion_import_users') }}" class="btn btn-secondary-custom btn-sm">Add users with CSV file</a>
 
 
     </div>

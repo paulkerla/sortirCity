@@ -14,13 +14,13 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <h1 class="h3 mb-3 font-weight-normal text-site-color">Please sign in</h1>
         <label for="username">Email</label>
         <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
         <label for="password">Password</label>
         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
         <input type="checkbox" id="remember_me" name="_remember_me">
-        <label for="remember_me">Se souvenir de moi</label><br>
+        <label for="remember_me">Remember me</label><br>
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
         >
@@ -36,7 +36,7 @@
             </div>
         #}
 
-        <button class="btn btn-lg btn-primary" type="submit">
+        <button class="btn btn-lg btn-secondary-custom" type="submit">
             Sign in
         </button>
         <br>

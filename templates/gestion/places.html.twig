@@ -9,10 +9,10 @@
         <form method="get" action="{{ path('gestion_places') }}" class="mb-4">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Find a place" value="{{ search }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-secondary-custom">Search</button>
             </div>
         </form>
-        <h1 class="mb-4">Places Management</h1>
+        <h1 class="mb-4 text-site-color">Places Management</h1>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -37,6 +37,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('gestion_place_create') }}" class="btn btn-success btn-sm">Add place</a>
+        <a href="{{ path('gestion_place_create') }}" class="btn btn-secondary-custom btn-sm">Add place</a>
     </div>
 {% endblock %}

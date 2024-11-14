@@ -10,7 +10,7 @@
         <form method="get" action="{{ path('gestion_cities') }}" class="mb-4">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Find a city" value="{{ search }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-secondary-custom">Search</button>
             </div>
         </form>
         <h1 class="mb-4">Cities Management</h1>
@@ -28,7 +28,7 @@
                     <td>{{ city.name }}</td>
                     <td>{{ city.zipCode }}</td>
                     <td>
-                        <a href="{{ path('gestion_city_update', {id: city.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ path('gestion_city_update', {id: city.id}) }}" class="btn btn-secondary-custom btn-sm">Edit</a>
                         <a href="{{ path('gestion_city_delete', {id: city.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this city?');">Delete</a>
                     </td>
                 </tr>
@@ -39,6 +39,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('gestion_city_create') }}" class="btn btn-success btn-sm mt-3">Add city</a>
+        <a href="{{ path('gestion_city_create') }}" class="btn btn-secondary-custom btn-sm mt-3">Add city</a>
     </div>
 {% endblock %}

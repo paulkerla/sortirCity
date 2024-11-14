@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Import Users</h1>
+    <h1 class="text-site-color">Import Users</h1>
 
     {{ form_start(form) }}<br>
     {{ form_row(form.csvFile) }}<br>
-    <button class="btn btn-primary">Import</button>
+    <button class="btn btn-secondary-custom">Import</button>
     {{ form_end(form) }}
 
     {% for message in app.flashes('success') %}
