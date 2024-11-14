@@ -8,6 +8,7 @@ use App\Entity\State;
 use App\Form\MeetupFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -95,7 +96,6 @@ class MeetupController extends AbstractController
         }
         $meetup->setState($createdState);
 
-        // Set the current user as the organizer
         $user = $this->getUser();
         if ($user) {
             $meetup->setOrganizer($user);
@@ -105,6 +105,19 @@ class MeetupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Validation de la date limite d'inscription
+            if ($meetup->getRegistrationlimitdate() > $meetup->getStartdatetime()) {
+                $this->addFlash('error', 'The registration deadline must be before the start date & time.');
+                return $this->render('meetups/meetupform.html.twig', ['form' => $form->createView()]);
+            }
+
+            // Validation du nombre maximal de participants
+            if ($meetup->getMaxregistrations() !== null && $meetup->getParticipants()->count() > $meetup->getMaxregistrations()) {
+                $this->addFlash('error', 'The number of participants cannot exceed the maximum allowed.');
+                return $this->render('meetups/meetupform.html.twig', ['form' => $form->createView()]);
+            }
+
+            // Gestion des lieux
             $existingPlace = $form->get('place')->getData();
             $newPlace = $form->get('newPlace')->getData();
 
@@ -117,12 +130,10 @@ class MeetupController extends AbstractController
                 if ($existingCity) {
                     $newPlace->setCity($existingCity);
                 } elseif ($newCityData) {
-                    // Si une nouvelle ville est créée, on la persiste
                     $entityManager->persist($newCityData);
                     $newPlace->setCity($newCityData);
                 }
 
-                // Persister le nouveau lieu avec la ville définie
                 $entityManager->persist($newPlace);
                 $meetup->setPlace($newPlace);
             }
@@ -130,6 +141,7 @@ class MeetupController extends AbstractController
             $entityManager->persist($meetup);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Meetup created successfully!');
             return $this->redirectToRoute('meetup_list');
         }
 
