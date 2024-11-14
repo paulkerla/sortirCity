@@ -6,20 +6,20 @@
     <main class="container mt-5">
         <!-- Message de bienvenue -->
         {% if app.user %}
-            <h1 class="display-4 text-dark mb-4 text-center">Welcome to ENI Meetups, {{ app.user.username }}!</h1>
+            <h1 class="display-4 text-site-color mb-4 text-center">Welcome to ENI Meetups, {{ app.user.username }}!</h1>
         {% else %}
-            <h1 class="display-4 text-dark mb-4 text-center">Welcome to ENI Meetups!</h1>
+            <h1 class="display-4 text-site-color mb-4 text-center">Welcome to ENI Meetups!</h1>
             <div class="text-center mb-4">
                 <a href="{{ path('user_login') }}" class="btn btn-primary mx-2">Login</a>
                 <a href="{{ path('app_register') }}" class="btn btn-secondary mx-2">Register</a>
             </div>
         {% endif %}
 
-        <h2 class="display-5 text-dark mb-4 text-center">Upcoming Meetups</h2>
+        <h2 class="display-5 text-site-color mb-4 text-center">Upcoming Meetups</h2>
 
         <!-- Section "Aujourd'hui" -->
         {% if meetupsToday|length > 0 %}
-            <h3 class="text-dark mt-4">Today</h3>
+            <h3 class="mt-4 text-site-color">Today</h3>
             <div class="row">
                 {% for meetup in meetupsToday %}
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
@@ -27,9 +27,9 @@
                             <div class="card-body d-flex flex-column">
                                 <h3 class="card-title h5 text-dark fw-bold mb-2">{{ meetup.name }}</h3>
                                 <p class="text-muted mb-1">📅 <strong>Time:</strong> {{ meetup.startdatetime|date('H:i') }}</p>
-                                <p class="text-muted mb-1">📍 <strong>Location:</strong> {{ meetup.place.name }}</p>
+                                <p class="text-muted mb-2">📍 <strong>Location:</strong> <span class="fw-semibold">{{ meetup.place.name }}, {{ meetup.place.city.name }}</span></p>
                                 <p class="text-muted mb-3">📝 <strong>State:</strong> {{ meetup.state.label }}</p>
-                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-primary mt-auto">View Details</a>
+                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-secondary-custom mt-auto">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
 
         <!-- Section "Demain" -->
         {% if meetupsTomorrow|length > 0 %}
-            <h3 class="text-dark mt-4">Tomorrow</h3>
+            <h3 class="mt-4 text-site-color">Tomorrow</h3>
             <div class="row">
                 {% for meetup in meetupsTomorrow %}
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
@@ -47,9 +47,9 @@
                             <div class="card-body d-flex flex-column">
                                 <h3 class="card-title h5 text-dark fw-bold mb-2">{{ meetup.name }}</h3>
                                 <p class="text-muted mb-1">📅 <strong>Time:</strong> {{ meetup.startdatetime|date('H:i') }}</p>
-                                <p class="text-muted mb-1">📍 <strong>Location:</strong> {{ meetup.place.name }}</p>
+                                <p class="text-muted mb-2">📍 <strong>Location:</strong> <span class="fw-semibold">{{ meetup.place.name }}, {{ meetup.place.city.name }}</span></p>
                                 <p class="text-muted mb-3">📝 <strong>State:</strong> {{ meetup.state.label }}</p>
-                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-primary mt-auto">View Details</a>
+                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-secondary-custom mt-auto">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
 
         <!-- Section "Cette Semaine" -->
         {% if meetupsThisWeek|length > 0 %}
-            <h3 class="text-dark mt-4">This Week</h3>
+            <h3 class="mt-4 text-site-color">This Week</h3>
             <div class="row">
                 {% for meetup in meetupsThisWeek %}
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
@@ -67,9 +67,9 @@
                             <div class="card-body d-flex flex-column">
                                 <h3 class="card-title h5 text-dark fw-bold mb-2">{{ meetup.name }}</h3>
                                 <p class="text-muted mb-1">📅 <strong>Date:</strong> {{ meetup.startdatetime|date('d M Y H:i') }}</p>
-                                <p class="text-muted mb-1">📍 <strong>Location:</strong> {{ meetup.place.name }}</p>
+                                <p class="text-muted mb-2">📍 <strong>Location:</strong> <span class="fw-semibold">{{ meetup.place.name }}, {{ meetup.place.city.name }}</span></p>
                                 <p class="text-muted mb-3">📝 <strong>State:</strong> {{ meetup.state.label }}</p>
-                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-primary mt-auto">View Details</a>
+                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-secondary-custom mt-auto">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
 
         <!-- Section "Plus Tard" -->
         {% if meetupsLater|length > 0 %}
-            <h3 class="text-dark mt-4">Later</h3>
+            <h3 class="mt-4 text-site-color">Later</h3>
             <div class="row">
                 {% for meetup in meetupsLater %}
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
@@ -89,7 +89,7 @@
                                 <p class="text-muted mb-1">📅 <strong>Date:</strong> {{ meetup.startdatetime|date('d M Y H:i') }}</p>
                                 <p class="text-muted mb-1">📍 <strong>Location:</strong> {{ meetup.place.name }}</p>
                                 <p class="text-muted mb-3">📝 <strong>State:</strong> {{ meetup.state.label }}</p>
-                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-primary mt-auto">View Details</a>
+                                <a href="{{ path('meetup_details', { 'id': meetup.id }) }}" class="btn btn-secondary-custom mt-auto">View Details</a>
                             </div>
                         </div>
                     </div>

@@ -63,7 +63,7 @@ class MeetupController extends AbstractController
             $entityManager->persist($meetup);
         }
 
-        $entityManager->flush(); // Persist status updates
+        $entityManager->flush();
 
         $totalMeetups = $meetupRepo->count(['site' => $siteId]);
         $totalPages = ceil($totalMeetups / $limit);
