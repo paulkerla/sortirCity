@@ -6,6 +6,7 @@ use App\Entity\Meetup;
 use App\Entity\Site;
 use App\Entity\State;
 use App\Form\MeetupFormType;
+use App\Service\StateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -19,7 +20,7 @@ class MeetupController extends AbstractController
 {
 
     #[Route('/', name: 'list')]
-    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    public function list(Request $request, EntityManagerInterface $entityManager,StateService $stateService): Response
     {
         $states = $entityManager->getRepository(State::class)->findAll();
         $sites = $entityManager->getRepository(Site::class)->findAll();
@@ -55,9 +56,9 @@ class MeetupController extends AbstractController
         $meetups = $queryBuilder->getQuery()->getResult();
 
         foreach ($meetups as $meetup) {
-            $meetup->updateStatusIfDeadlinePassed($entityManager);
-            $meetup->updateStatusIfMeetupArchive($entityManager);
-            $meetup->updateStatusIfMeetupPassed($entityManager);
+            $stateService->updateStatusIfDeadlinePassed($entityManager,$meetup);
+            $stateService->updateStatusIfMeetupArchive($entityManager,$meetup);
+            $stateService->updateStatusIfMeetupPassed($entityManager,$meetup);
             $entityManager->persist($meetup);
         }
 
